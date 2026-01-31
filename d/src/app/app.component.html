@@ -1,0 +1,39 @@
+<app-loader class="text-base"></app-loader>
+<app-popup></app-popup>
+<app-alert [size]="2" [title]="'Pages'" [alert]="utlityService.getalert() == 'sidebar'" (close)="utlityService.hidealert()">
+  <app-sidebar></app-sidebar>
+</app-alert>
+<div class="font-medium text-base min-h-screen flex flex-col md:flex-row">
+  <!-- if no user -->
+  <div *ngIf="!user" class="fixed w-full h-full">
+   <div class="p-6 bg-yellow-100 border border-yellow-300 text-center">
+    <h2 class="text-lg font-semibold text-yellow-800">Access Restricted</h2>
+    <p class="mt-1 text-yellow-700">Please login to the dashboard to continue.</p>
+   </div>
+  </div>
+  <!-- Sidebar -->
+  <app-sidebar *ngIf="user" class=" z-[200] hidden md:block fixed left-0 top-0 h-full md:w-60 lg:w-60 "></app-sidebar>
+  <div class="flex-1 md:ml-60 lg:ml-60">
+  <!-- Sticky User Info Header -->
+  <div *ngIf="user" class="flex justify-between sticky top-0 z-10 text-white bg-blue-700 border-b border-gray-100 p-3 gap-3 ">
+   <div class="flex flex-col gap-1">
+      <p class="flex items-center gap-1">
+        {{user?.name}}<span class="capitalize text-red-500 font-bold text-xs">[{{user?.role}}]</span>
+      </p>
+      <p class="text-sm">
+       {{user?.phone}}
+      </p>
+    </div>
+    <div (click)="utlityService.showalert('sidebar');" class="sm:hidden flex items-center justify-center">
+       <svg class="size-6 cursor-pointer " fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" 
+              d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </div>
+  </div>
+  <!-- end Sticky User Info Header -->
+   <div class="p-3 pb-20">
+     <router-outlet ></router-outlet>
+   </div>
+  </div>
+</div>

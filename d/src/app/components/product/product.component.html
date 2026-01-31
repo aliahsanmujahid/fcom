@@ -1,0 +1,114 @@
+<app-alert [size]="1" [title]="'Confirm'" [alert]="dalert" (close)="dalert = $event">
+  <div class="p-3 flex text-center flex-col gap-3 justify-center items-center min-h-full w-full">
+    <p>Want to delete : {{selectedProduct?.name}}</p>
+    <button class=" py-1 px-3 text-white bg-blue-700 
+    hover:bg-blue-800  " (click)="deleteproduct(selectedProduct?.id)">
+    Confirm
+    </button>
+  </div>
+</app-alert>
+<div class="flex flex-col gap-3 py-3 w-full">
+  <div class="w-full flex items-center justify-center gap-3 rounded bg-white">
+  <form [formGroup]="searchform" (ngSubmit)="getproducts()" autocomplete="off" class="relative w-full flex flex-col gap-10">
+      <input formControlName="search" 
+       [ngClass]="{
+       'is-invalid':(f.search.errors && f.search.touched) ||
+           (f.search.errors && submitted)}"
+           placeholder="By Customer/Order"
+           name="search"
+           id="search"
+           type="text"
+           class=" flex-1 rounded border border-gray-300 px-4 py-2 "/>
+    <button class="cursor-pointer absolute top-0 right-0 p-[12px] rounded-l text-sm font-medium text-white bg-blue-700 hover:bg-blue-800 outline-none"
+      (click)="getproducts()"
+    >
+      <svg viewBox="0 0 24 24" fill="currentColor" class="size-4 text-white ">
+        <path fill-rule="evenodd" d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z" clip-rule="evenodd" />
+      </svg>
+    </button>       
+  </form>
+  <button class="cursor-pointer p-[12px] rounded text-sm font-medium text-white bg-gray-700 hover:bg-blue-800 outline-none"
+      (click)="reset()"
+    >
+    <svg fill="currentColor" class="size-4 " viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
+  <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
+</svg>
+  </button>
+</div>
+
+<ng-container *ngIf="products?.length > 0">
+  <div class="w-full flex flex-col items-center justify-start " *ngFor="let item of products" >
+  <div class=" rounded-x rounded-t border border-gray-300 p-3 py-5 bg-white w-full flex items-center justify-between gap-3 ">
+  <div class="cursor-pointer flex flex-wrap items-center gap-4 uppercase w-auto">
+    <p class="text-gray-700 font-medium">Product Id: <span class="font-normal">{{item?.uid}}</span></p>
+  </div>
+</div>
+  <div class="w-full flex flex-col items-start gap-3 p-3 bg-white border-t-0 border border-gray-200">
+      <div class="grid gap-3 grid-cols-2 sm:grid-cols-4 w-full gap-3">
+    <ng-container *ngFor="let i of [1,2,3,4]">
+       <img src="{{item['file'+i]}}" alt=" " 
+            class="bg-gray-50 w-full  min-w-[120px] min-h-[150px] border border-gray-200 rounded overflow-hidden "
+            loading="lazy">  
+    </ng-container>
+  </div>
+     <div class="w-full ">
+          <div class="w-full rounded p-3 border border-gray-200">
+          <p class="">Id: <span class="text-blue-500">{{ item?.uid }}</span>, Sku: <span class="text-blue-500">{{ item?.sku }}</span></p>
+          <p class="">Category: {{ item?.catename }}, Sub: {{ item?.subcatename }}</p>
+          <div *ngIf="item?.hasvari == 0" class="flex items-center gap-2">
+          <span class="">Sell Price: {{ item?.sprice }}</span>
+          <span class="line-through text-gray-400">Price {{ item?.price }}</span>
+          <p class="text-red-400 text-xs">
+              ({{ ((item?.price - item?.sprice) / item?.price * 100) | number:'1.0-0' }}% OFF)
+          </p>
+        </div>
+        <p [innerHTML]="item?.name"></p>
+        <p [innerHTML]="item?.details"></p>
+        </div>
+        <div  *ngIf="item?.vari?.values?.length > 0" class="mt-3 w-full border rounded p-3 border-gray-200 grid items-start gap-3 sm:grid-cols-3 ">
+            <div *ngFor="let c of item.vari.values" class="flex-grow flex flex-col">
+                <span class="font-bold ">{{ item?.vari?.name }} : {{c.name}}</span>
+                <span class="text-gray-500">Price: {{c.price}}, Sell Price: {{c.sprice}}, Qunatity: {{c.quantity}},Off: {{((c?.price - c?.sprice) / c?.price * 100).toFixed(0)+'%'}},Sku: {{c.sku}}</span>
+            </div>
+        </div>
+        </div>
+
+        <div class="w-full flex gap-3 items-end justify-end ">
+      <button (click)="alerttoggle2(item)"
+          class="p-1.5 border border-gray-200 text-red-500 rounded cursor-pointer flex items-center justify-center text-center transition-all duration-200 hover:opacity-90">
+          <svg fill="currentColor" class="size-4 " viewBox="0 0 16 16">
+            <path d="M0 2a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1v7.5a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 1 12.5V5a1 1 0 0 1-1-1zm2 3v7.5A1.5 1.5 0 0 0 3.5 14h9a1.5 1.5 0 0 0 1.5-1.5V5zm13-3H1v2h14zM5 7.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5"/>
+          </svg>
+      </button>
+      <button (click)="productactiveinactive(item)"
+          [ngClass]="item.ia == 1 ? ' text-blue-500 border-blue-200 ' : ' text-gray-500 border-gray-200 ' "
+          class="p-1.5 border rounded cursor-pointer flex items-center justify-center text-center transition-all duration-200 hover:opacity-90">
+        <svg fill="currentColor" class="size-4 " viewBox="0 0 16 16">
+         <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+         <path d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
+        </svg>
+      </button>
+      <button [routerLink]="['/createproduct',{editproduct: item.uid }]"
+          class="p-1.5 border border-gray-200 text-yellow-500 rounded cursor-pointer flex items-center justify-center text-center transition-all duration-200 hover:opacity-90">
+          <svg fill="currentColor" class="size-4" viewBox="0 0 16 16">
+           <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+           <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+          </svg>
+      </button>
+    </div>
+  </div>
+  </div>
+
+<div class="mt-3 w-full flex items-end justify-end ">
+  <button (click)="loadProduct()" [ngClass]="nomoreproduct ? ' bg-gray-500 ': ' bg-blue-500 '" [disabled]="nomoreproduct" class="cursor-pointer rounded px-3 py-1.5 " >
+     <svg fill="currentColor" class="size-5 text-white" viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
+      <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
+    </svg>
+  </button>
+</div>
+
+</ng-container>
+</div>
+<app-fail *ngIf="products?.length == 0" class="w-full"></app-fail>

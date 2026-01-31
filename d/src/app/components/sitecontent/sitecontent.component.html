@@ -1,0 +1,75 @@
+
+ <div class="border p-3 rounded border-gray-200 ">
+  <div class="column">
+    <div class="flex flex-col flex-wrap gap-3 w-full">
+      <label for="address" class="">Site Scripts</label>
+        <textarea
+        [(ngModel)]="model.scripts"
+        name="address"
+              id="address"
+              class="h-[300px] rounded px-2 py-1  border border-gray-300
+              "
+        ></textarea>
+        <br>
+       <label for="facebook" class="">Facebook</label>
+       <input
+              [(ngModel)]="model.facebook"
+              placeholder="Facebook Link"
+              name="facebook"
+              type="text"
+              id="facebook"
+              class="rounded px-2 py-1  border border-gray-300
+              " />
+              <label for="tiktok" class="">Tiktok</label>
+              <input
+                     [(ngModel)]="model.tiktok"
+                     placeholder="Tiktok Link"
+                     name="tiktok"
+                     type="text"
+                     id="tiktok"
+                     class="rounded px-2 py-1 border border-gray-300
+                     " />
+                     <label for="instagram" class="">Instagram</label>
+                     <input
+                            [(ngModel)]="model.instagram"
+                            placeholder="Instagram Link"
+                            name="instagram"
+                            type="text"
+                            id="instagram"
+                            class="rounded px-2 py-1 border border-gray-300" />
+                            <label for="y" class="">Youtube</label>
+                            <input
+                                   [(ngModel)]="model.youtube"
+                                   placeholder="Youtube Link"
+                                   name="youtube"
+                                   type="text"
+                                   id="youtube"
+                                   class="rounded px-2 py-1 border border-gray-300" />
+                            <label for="Logo" class="">Logo</label>
+                            <input
+                                   [(ngModel)]="model.logo"
+                                   placeholder="Logo"
+                                   name="Logo"
+                                   type="text"
+                                   id="Logo"
+                                   class="rounded px-2 py-1 border border-gray-300" />
+                            <label for="Favicon" class="">Favicon</label>
+                            <input
+                                   [(ngModel)]="model.favicon"
+                                   placeholder="Favicon"
+                                   name="Favicon"
+                                   type="text"
+                                   id="Favicon"
+                                   class="rounded px-2 py-1 border border-gray-300" /> 
+                                          
+                                   
+    </div>
+     <div class="mt-5 flex w-full gap-2">
+       <button (click)="createupdatesitecontent()"  class="w-full py-2 rounded bg-emerald-500 text-white text-xs">
+        {{model.id == 0 ? 'Save Changes' :'Update Changes' }}
+       </button>
+      </div>
+
+  </div>
+
+</div>

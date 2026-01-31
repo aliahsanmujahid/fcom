@@ -1,0 +1,57 @@
+<app-reviews class="text-base"></app-reviews>
+<app-navbar class="text-base"></app-navbar>
+<div *ngIf="(utlityService.loader$ | async)" class="size-10 border-3 rounded-full border-dotted border-gray-400 animate-spin fixed top-30 left-1/2 -translate-x-1/2 z-[100]"></div>
+<div class="flex font-medium text-base mx-auto min-h-[100vh]">
+  <div class="border border-gray-100 h-full hidden md:block fixed left-0 top-15 md:w-50 lg:w-60 ">
+    <div class="p-5 pt-3 pb-30 bg-white h-full overflow-y-auto ">
+       <div class="grid grid-cols-2 gap-1"> 
+      <div *ngFor="let item of accountService.sorts; let i = index"
+           (click)="checkSelect(item)"
+           [ngClass]="params?.sortby == item?.id ? ' border-blue-300 ' : ' border-transparent '" 
+           class="p-3 flex flex-col cursor-pointer border items-center text-center rounded">
+         <img src="{{item?.img}}" alt="" 
+            class="bg-gray-50 size-15 rounded"
+            loading="lazy">
+        <a class="text-sm font-medium text-gray-700 hover:text-pink-600 mt-2">
+          {{ item?.name }}
+        </a>
+      </div>
+      </div>
+      <br>
+      <div class="grid grid-cols-2 gap-1"> 
+      <ng-container *ngFor="let item of category; let i = index" >
+      <div 
+           (click)="setcateparams(item,true)" 
+           [ngClass]="params?.cateid == item?.id ? ' border-blue-300 ' : ' border-transparent '"
+           class="relative p-3 border cursor-pointer flex flex-col border items-center text-center rounded-md">
+         <img src="{{item?.image}}" alt="" 
+            class="bg-gray-50 size-15 rounded-full"
+            loading="lazy">
+        <a class="text-sm font-medium text-gray-700 hover:text-pink-600 mt-2">
+          {{ item?.name }}
+        </a>
+        <span class="absolute right-2 text-xs" [ngClass]="item?.tp > 0 ? '  text-green-500 ' : '  text-gray-400 '" >({{ item?.tp }})</span>
+      </div>
+      <div *ngFor="let sub of item?.subcate; let j = index"
+           (click)="setcateparams(sub,false)"
+           [ngClass]="params?.subcateid == sub?.id ? ' border-blue-300 ' : ' border-transparent '"
+           class="relative p-3 border cursor-pointer flex flex-col items-center text-center rounded-md">
+         <img src="{{sub?.image}}" alt="" 
+            class="bg-gray-50 size-15 rounded-full"
+            loading="lazy">
+        <a class="text-sm font-medium text-gray-700 hover:text-pink-600 mt-2">
+          {{ sub?.name }}
+        </a>
+        <span class="absolute right-2 text-xs" [ngClass]="sub?.tp > 0 ? '  text-green-500 ' : '  text-gray-400 '" >({{ sub?.tp }})</span>
+      </div>
+      </ng-container>
+      </div>
+    </div>
+  </div>
+  <div class="flex-1 md:ml-50 lg:ml-60">
+   <div class="w-full min-h-[100vh]">
+     <router-outlet></router-outlet>
+   </div>
+   <app-footer class="font-medium text-base"></app-footer>
+  </div>
+</div>

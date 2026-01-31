@@ -1,0 +1,341 @@
+<div class="flex flex-col items-center justify-center ">
+<form [formGroup]="pForm" (ngSubmit)="createupdateproduct()" autocomplete="off" class="w-full flex flex-col gap-5">
+  <!-- Header -->
+  <div class="w-full ">
+     <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="name">
+      Variation name
+    </label>
+    <input
+      formControlName="variname"
+      type="text"
+      id="variname"
+      name="variname"
+      [ngClass]="{
+        'is-invalid': (f.variname.errors && f.variname.touched) || (f.variname.errors && submitted)
+      }"
+      placeholder="e.g., Size, Color, Material"
+      class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight"
+    />
+  </div>
+  <!-- Scrollable Table -->
+  <div *ngIf="variitem.controls?.length > 0" class="w-full max-w-full overflow-x-auto">
+    <table class="min-w-[900px] sm:min-w-0 w-full border-collapse">
+      <tbody formArrayName="variitems" class="space-y-5 rounded bg-white ">
+        <tr
+          *ngFor="let item of variitem.controls; let i = index"
+          [formGroupName]="i"
+          class="w-full flex gap-3"
+        >
+          <!-- Option Name -->
+          <td class="w-full">
+            <input
+              formControlName="name"
+              placeholder="Name"
+              name="{{'name'+i}}"
+              [ngClass]="{
+              'is-invalid':
+              (item.get('name')?.errors && item.get('name')?.touched) ||
+              (item.get('name')?.errors && submitted)
+              }"
+              type="text"
+              class="w-full bg-gray-50 border border-gray-300 rounded py-2 px-3"
+            />
+          </td>
+
+          <!-- Price -->
+          <td class="w-full">
+            <input
+              formControlName="price"
+              placeholder="Price"
+              name="{{'price'+i}}"
+              [ngClass]="{
+              'is-invalid':
+              (item.get('price')?.errors && item.get('price')?.touched) ||
+              (item.get('price')?.errors && submitted)
+             }"
+              type="number"
+              class="w-full bg-gray-50 border border-gray-300 rounded py-2 px-3 "
+            />
+          </td>
+
+          <!-- Selling Price -->
+          <td class="w-full relative ">
+            <input
+              formControlName="sprice"
+              placeholder="Selling price"
+              name="{{'sprice'+i}}"
+              [ngClass]="{
+              'is-invalid':
+              (item.get('sprice')?.errors && item.get('sprice')?.touched) ||
+              (item.get('sprice')?.errors && submitted)
+             }"
+              type="number"
+              class="w-full bg-gray-50 border border-gray-300 rounded py-2 px-3 "
+            />
+            <p *ngIf="item.get('price').value && item.get('sprice').value" class="absolute text-red-500 font-bold text-xs top-1/2 -translate-y-1/2 right-3 ">{{ ((item.get('price').value - item.get('sprice').value) / item.get('price').value * 100).toFixed(0) }}% OFF</p>
+          </td>
+
+          <!-- Quantity -->
+          <td class="w-full ">
+            <input
+              formControlName="quantity"
+              placeholder="Qty"
+              name="{{'quantity'+i}}"
+              [ngClass]="{
+              'is-invalid':
+              (item.get('quantity')?.errors && item.get('quantity')?.touched) ||
+              (item.get('quantity')?.errors && submitted)
+             }"
+              type="number"
+              class="w-full bg-gray-50 border border-gray-300 rounded py-2 px-3 "
+            />
+          </td>
+
+          <!-- SKU -->
+          <td class="w-full relative ">
+            <input
+              formControlName="sku"
+              placeholder="Sku"
+              name="{{'sku'+i}}"
+              [ngClass]="{
+              'is-invalid':
+              (item.get('sku')?.errors && item.get('sku')?.touched) ||
+              (item.get('sku')?.errors && submitted)
+             }"
+              type="text"
+              class="w-full bg-gray-50 border border-gray-300 rounded py-2 px-3 "
+            />
+            <p (click)="removeItem(i)" class="text-red-500 absolute right-2 top-[25%] ">
+              <svg (click)="removeItem(i)" fill="currentColor" class="size-4 text-red-500 " viewBox="0 0 16 16">
+               <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+              </svg>
+            </p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  <!-- Add Variation Button -->
+  </div>
+  <div class="w-full">
+      <button
+    type="button"
+    class=" cursor-pointer w-full flex items-center text-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white px-5 py-2 rounded shadow-md transition"
+    (click)="addItem(null)"
+  >
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+      viewBox="0 0 24 24">
+      <path d="M12 4v16m8-8H4" />
+    </svg>
+    Add {{ f.variname.value ? f.variname.value : 'Variation' }}
+  </button>
+  </div>
+  <!-- top part end -->
+<div class="flex flex-wrap -mx-3  space-y-5 ">
+  <div *ngIf="variitem.controls.length == 0" class="w-full md:w-1/3 px-3 ">
+    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"  for="price">
+     Original Price
+    </label>
+    <input formControlName="price"
+    placeholder="Original price"
+    name="price"
+    id="price"
+    type="number" 
+    [ngClass]="{
+     'is-invalid':
+     (f.price.errors && f.price.touched) ||
+     (f.price.errors && submitted)
+    }" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight " >
+  </div>
+    <div *ngIf="variitem.controls.length == 0" class="w-full md:w-1/3 px-3 relative">
+    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"  for="sprice">
+     Selling Price
+    </label>
+    <input formControlName="sprice"
+    placeholder="Selling price"
+    name="sprice"
+    id="sprice"
+    type="number" 
+    [ngClass]="{
+     'is-invalid':
+     (f.sprice.errors && f.sprice.touched) ||
+     (f.sprice.errors && submitted)
+    }" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight " >
+    <p *ngIf="f.price.value && f.sprice.value" class="absolute text-red-500 font-bold text-xs top-2/3 -translate-y-1/2 right-5 ">{{ ((f.price.value - f.sprice.value) / f.price.value * 100).toFixed(0) }}% OFF</p> 
+  </div>
+  <div *ngIf="variitem.controls.length == 0" class="w-full md:w-1/3 px-3  ">
+    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="quantity">
+      Quantity
+    </label>
+    <input formControlName="quantity"
+            placeholder="Quantity"
+            name="quantity"
+            id="quantity"
+             [ngClass]="{
+     'is-invalid':
+     (f.quantity.errors && f.quantity.touched) ||
+     (f.quantity.errors && submitted)
+    }"
+            type="number" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight ">
+  </div>
+  <div class="w-full md:w-1/3 px-3 ">
+    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="sku">
+      Product Sku
+    </label>
+    <input  formControlName="sku"
+            placeholder="Sku"
+            id="sku"
+            name="sku"
+            [ngClass]="{
+     'is-invalid':
+     (f.sku.errors && f.sku.touched) ||
+     (f.sku.errors && submitted)
+    }" type="text" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight ">
+  </div>
+</div>
+<div class="flex flex-wrap -mx-3 mb-2">
+  <div class="w-full md:w-1/3 px-3 ">
+    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="cateid">
+      Category name
+    </label>
+    <div class="relative">
+      <select id="cateid" (change)="onCateChange()" 
+      formControlName="cateid" [ngClass]="{
+        'is-invalid':
+        (f.cateid.errors && f.cateid.touched) ||
+        (f.cateid.errors && submitted)}" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight " >
+        <option value='' disabled>Select</option>
+        <option *ngFor="let s of categoryes" value="{{ s.id }}">{{ s.name }}</option>
+      </select>
+      <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+        <svg class="fill-current h-4 w-4" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+      </div>
+    </div>
+  </div>
+  <div class="w-full md:w-1/3 px-3 ">
+    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"  for="subcateid">
+      Sub category name
+    </label>
+    <div class="relative">
+      <select id="subcateid" (change)="onSubCateChange()" 
+      formControlName="subcateid" 
+      [ngClass]="{
+      'is-invalid':
+      (f.subcateid.errors && f.subcateid.touched) ||
+      (f.subcateid.errors && submitted)}" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight ">
+        <option value=''>Select</option>
+        <option *ngFor="let ss of subcategoryes" value="{{ ss.id }}">{{ ss.name }}</option>
+      </select>
+      <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+        <svg class="fill-current h-4 w-4" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="flex flex-col gap-5 flex-wrap -mx-3  mb-2">
+  <div class="w-full px-3 ">
+    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="name">
+      Product name
+    </label>
+    <input formControlName="name" 
+        placeholder="Product name"
+        name="name"
+        id="name"
+        [ngClass]="{
+    'is-invalid':
+    (f.name.errors && f.name.touched) ||
+    (f.name.errors && submitted)}"
+        type="text" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight ">
+  </div>
+  <div class="w-full px-3 ">
+    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="details">
+      Product details
+    </label>
+    <div class="border-x border-t border-gray-100 ">
+			<ngx-editor-menu [editor]="editor" [toolbar]="toolbar">
+			</ngx-editor-menu>
+		</div>
+    <ngx-editor [editor]="editor" formControlName="details">
+		</ngx-editor>
+  </div>
+</div>
+ <!-- image section -->
+ <div class="flex flex-wrap items-center justify-start gap-5">
+  <div *ngFor="let i of [1,2,3,4]" class="w-full md:w-1/4">
+    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="{{'file'+i}}">
+      File {{i}} link
+    </label>
+    <input formControlName="{{'file'+i}}"
+            placeholder="{{'File '+i + ' link'}}"
+            name="{{'file'+i}}"
+            id="{{'file'+i}}"
+            [ngClass]="{
+     'is-invalid':
+     (f['file'+i].errors && f['file'+i].touched) ||
+     (f['file'+i].errors && submitted)
+    }"
+    type="text" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight ">
+  </div>
+  <div class="w-full md:w-1/3 ">
+    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="name">
+      Youtube video link
+    </label>
+    <input formControlName="video" 
+        placeholder=" Youtube video link"
+        name="video"
+        id="video"
+        [ngClass]="{
+    'is-invalid':
+    (f.video.errors && f.video.touched) ||
+    (f.video.errors && submitted)}"
+        type="text" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight ">
+  </div>
+ </div>
+ <div class="flex flex-wrap -mx-3 space-y-5 ">
+  <div class="w-full md:w-1/3 px-3 ">
+    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="name">
+      Product Weight
+    </label>
+    <input formControlName="weight" 
+        placeholder="Product weight"
+        name="weight"
+        id="weight"
+        [ngClass]="{
+    'is-invalid':
+    (f.weight.errors && f.weight.touched) ||
+    (f.weight.errors && submitted)}"
+        type="text" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight ">
+  </div>
+</div>
+<div *ngIf="+f.weight.value > 1" class="bg-white rounded-lg shadow p-4 space-y-3 border border-gray-200">
+  <div class="flex items-center justify-between border-b border-gray-200 pb-2">
+    <span class="text-gray-600">Inside City</span>
+    <span class="font-bold text-blue-600">
+      {{
+        (
+          (+deliverydata.inside_city_charge?.value || 0) +
+          ((+deliverydata?.extra_per_kg || 0) * ((+f.weight?.value || 0) - 1))
+        ).toFixed(0)
+      }} /-
+    </span>
+  </div>
+
+  <div class="flex items-center justify-between">
+    <span class="text-gray-600">Outside City</span>
+    <span class="font-bold text-red-600">
+      {{
+        (
+          (+deliverydata.outside_city_charge?.value || 0) +
+          ((+deliverydata?.extra_per_kg || 0) * ((+f.weight?.value || 0) - 1))
+        ).toFixed(0)
+      }} /-
+    </span>
+  </div>
+</div>
+  <div class="w-full">
+    <app-button [isloading]="loading" 
+     [txt]="f.id.value ? 'Update Prodct ' : 'Create Product'"
+     [class]="' w-full cursor-pointer rounded px-5 py-2 text-white bg-blue-500 hover:bg-blue-800 '">
+    </app-button>
+  </div>
+</form>
+</div>

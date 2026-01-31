@@ -1,0 +1,177 @@
+ <app-alert [size]="2" [title]="'Filter'"  [alert]="utlityService.getalert() == 'filter'" (close)="utlityService.hidealert()" >
+   <form [formGroup]="searchForm" (ngSubmit)="search()" autocomplete="off" class="p-3 w-full min-h-full flex flex-col justify-between gap-3 ">
+    <div class="w-full space-y-3">
+      <div class="form-group flex flex-col w-full mb-4">
+  <label for="region" class="block text-gray-900 mb-2">Province / Region</label>
+  <select class="cursor-pointer rounded px-2 py-1.5 border border-gray-300"
+          formControlName="region"
+          id="region"
+           [ngClass]="{
+              'is-invalid':
+              (f.region.errors && f.region.touched) ||
+              (f.region.errors && submitted)
+            }"
+          (change)="onRegionChange($event)">
+    <option value="">Select Province</option>
+    <option *ngFor="let r of bdaddress" [value]="r.name">{{ r.name }}</option>
+  </select>
+</div>
+<!-- City Select -->
+<div class="form-group flex flex-col w-full mb-4">
+  <label for="city" class="block text-gray-900 mb-2">City</label>
+  <select class="cursor-pointer rounded px-2 py-1.5 border border-gray-300"
+          formControlName="city"
+          id="city"
+           [ngClass]="{
+              'is-invalid':
+              (f.city.errors && f.city.touched) ||
+              (f.city.errors && submitted)
+            }"
+          (change)="onCityChange($event)">
+    <option value="">Select City</option>
+    <option *ngFor="let c of cities" [value]="c.name">{{ c.name }}</option>
+  </select>
+</div>
+<!-- Zone Select -->
+<div class="form-group flex flex-col w-full mb-4">
+  <label for="zone" class="block text-gray-900 mb-2">Zone</label>
+  <select class="cursor-pointer rounded px-2 py-1.5 border border-gray-300"
+          formControlName="zone"
+           [ngClass]="{
+              'is-invalid':
+              (f.zone.errors && f.zone.touched) ||
+              (f.zone.errors && submitted)
+            }"
+          id="zone">
+    <option value="">Select Zone</option>
+   <option *ngFor="let z of zones" [value]="z">{{ z }}</option>
+  </select>
+</div>
+
+    <div class="form-group flex flex-col w-full">
+      <label for="timetype" class="block text-gray-900 mb-2">Time Type</label>
+      <select formControlName="timetype" name="timetype" id="timetype"
+          [ngClass]="{
+           'is-invalid': (f.timetype.errors && f.timetype.touched) || (f.timetype.errors && submitted)
+          }"
+          class="w-full min-w-[300px] rounded border border-gray-300 px-4 py-2 " >
+        <option value="" >All Time</option>
+        <option *ngFor="let r of timeType" [value]="r.id">
+         {{ r.v }}
+        </option>
+      </select>
+    </div>
+    </div>
+
+
+    <div class="w-full flex gap-3 items-center">
+      <button (click)="search()"
+      type="submit"
+      class="w-full bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700"
+    >
+      Search
+    </button>
+    <button
+      type="button"
+      (click)="reset()"
+      class="w-full bg-gray-200 text-gray-700 px-5 py-2 rounded hover:bg-gray-300"
+    >
+      Reset
+    </button>
+    </div>
+  </form>
+</app-alert>
+
+<div class="w-full border border-gray-200 p-2 rounded justify-between flex items-center gap-3 mb-6">
+   <div class="flex gap-3 items-center justify-end ">
+    <a class="p-0.5 px-3 border border-gray-200 rounded text-gray-500">{{data?.count != 0 ? 'Total ' + data?.count + ' - ' + data?.data?.length  : '--'}}</a>
+    <button (click)="downloadUsersAsHtml(data?.data,1)" class=" border border-gray-200 text-gray-400 rounded flex items-center justify-center text-center cursor-pointer p-1.5 ">
+        <svg fill="currentColor" class="size-4 " viewBox="0 0 16 16">
+         <path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.6 17.6 0 0 0 4.168 6.608 17.6 17.6 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.68.68 0 0 0-.58-.122l-2.19.547a1.75 1.75 0 0 1-1.657-.459L5.482 8.062a1.75 1.75 0 0 1-.46-1.657l.548-2.19a.68.68 0 0 0-.122-.58zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.68.68 0 0 0 .178.643l2.457 2.457a.68.68 0 0 0 .644.178l2.189-.547a1.75 1.75 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.6 18.6 0 0 1-7.01-4.42 18.6 18.6 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877z"/>
+        </svg>
+      </button>
+    <button (click)="downloadUsersAsHtml(data?.data,0)" class=" border border-gray-200 text-gray-400 rounded flex items-center justify-center text-center cursor-pointer p-1.5 ">
+        <svg fill="currentColor" class="size-4 " viewBox="0 0 16 16">
+          <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"/>
+          <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z"/>
+        </svg>
+    </button>
+  </div>
+   <div class="flex gap-3">
+    <button (click)="utlityService.showalert('filter')" class=" border border-gray-200 text-gray-400 rounded flex items-center justify-center text-center cursor-pointer p-1.5 ">
+      <svg fill="currentColor" class="size-4 " viewBox="0 0 16 16">
+        <path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5zm1 .5v1.308l4.372 4.858A.5.5 0 0 1 7 8.5v5.306l2-.666V8.5a.5.5 0 0 1 .128-.334L13.5 3.308V2z"/>
+      </svg>
+    </button>
+    <button (click)="reset()" class=" border border-gray-200 text-gray-400 rounded flex items-center justify-center text-center cursor-pointer p-1.5 ">
+    <svg fill="currentColor" class="size-4 " viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
+      <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
+    </svg>
+  </button>
+   </div>
+</div>
+
+
+
+<div class="w-full ">
+  <ul class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+    <li *ngFor="let user of data?.data" class=" flex w-full flex-col justify-between gap-3 p-2 border border-gray-400/30 rounded ">
+
+
+    <div class="flex w-full gap-3 ">
+      <a *ngIf="user?.image" class="w-full overflow-hidden rounded shrink-0" style="max-width: 100px;">
+        <img class="border border-gray-200 object-cover my-auto rounded w-28 h-28" width="200" height="200" loading="lazy" src="{{user?.image}}" alt="">
+    </a>
+
+    
+    <div class="flex flex-col justify-between flex-grow gap-3">
+        <div class="w-full">
+            <a class="font-semibold md:text-lg">
+                {{user?.name}}
+            </a>
+            <p class="pt-1 text-sm text-gray-700 two-lines">
+              Phone: {{user?.phone}}, Role: {{user?.role}},  Gender: {{user?.gender}}, 
+               Body Type: {{user?.bodytype}}, 
+                Status: {{user?.status}}, 
+                Age: {{user?.dob}}, 
+                Register Date: {{user?.cdate | date}}, 
+                Active Date: {{user?.adate | date }}, 
+            </p>
+                    </div>
+    </div>
+    </div>
+
+    <div class="flex items-center justify-between gap-1">
+            <div class="text-sm text-gray-700 ">
+                <a class="flex items-center gap-1.5 text-sm ">
+          <span class="size-1 bg-gray-500 rounded-full "></span>
+          <span>{{ user?.tproduct || 0 }} Products</span>
+        </a>
+        <a class="flex items-center gap-1.5 text-sm ">
+          <span>{{ user?.avgrating || 0 }} Rating</span>
+          <span class="size-1 bg-blue-500 rounded-full "></span>
+          <span>{{ user?.treview || 0 }} Reviews</span>
+        </a>
+            </div>
+            <div class="">
+                <button (click)="downloadUsersAsHtml([user],0)" class=" border border-gray-200 text-gray-400 rounded flex items-center justify-center text-center cursor-pointer p-1.5 ">
+        <svg fill="currentColor" class="size-4 " viewBox="0 0 16 16">
+          <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"/>
+          <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z"/>
+        </svg>
+    </button>
+            </div>
+        </div>
+</li>
+  </ul>
+
+  <div class="mt-3 w-full flex items-end justify-end ">
+  <button (click)="getPagedOrder()" [class]="nomoreorder ? ' text-gray-400 border-gray-200 ' : ' text-emerald-500 border-emerald-200 '  " class=" border rounded flex items-center justify-center text-center cursor-pointer p-1.5 ">
+    <svg fill="currentColor" class="size-4 " viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
+      <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
+    </svg>
+  </button>
+</div>
+</div>

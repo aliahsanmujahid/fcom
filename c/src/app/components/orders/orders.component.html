@@ -1,0 +1,261 @@
+<!-- for rating alert -->
+<app-alert [size]="2" [title]="'পণ্যের রিভিউ'" [alert]="(utlityService.getalert() == 'rating')" (close)="ratealerttoggle()">
+  <div class="p-3 sm:p-5 w-full min-h-full flex flex-col gap-3 items-start justify-between ">
+      <form [formGroup]="reviewForm" class="w-full flex flex-col gap-3 items-start justify-center ">
+      <!-- review txt Section -->
+      <div class="w-full mb-2">
+            <textarea name="review"
+            formControlName="review" 
+            [ngClass]="{
+                       'is-invalid':
+                       (f.review.errors && f.review.touched) ||
+                       (f.review.errors && submitted)
+                     }"
+            id="review"
+            rows="7" class="w-full border-1 rounded p-3 " placeholder="আপনার মতামত লিখুন।"></textarea>
+          <span *ngIf="(f.review.errors && f.review.touched) ||
+                       (f.review.errors && submitted)" 
+              class="text-sm text-red-400" >
+              * মিনিমাম ৩০ শব্দ লিখুন।
+          </span>
+      </div>
+      <!-- rating section -->
+      <div class="border border-gray-300 rounded p-3 w-full flex justify-between items-center my-3">
+        <div class="flex justify-center items-center gap-3">
+          <svg *ngFor="let star of [1,2,3,4,5] "
+            [ngClass]="{'text-yellow-500': review?.rating >= star}" 
+            (click)="review.rating = star" 
+            (mouseenter)="review.rating = star" class=" size-5 sm:size-7 h-auto fill-current" viewBox="0 0 576 512">
+            <path d="M381.2 150.3L524.9 171.5C536.8 173.2 546.8 181.6 550.6 193.1C554.4 204.7 551.3 217.3 542.7 225.9L438.5 328.1L463.1 474.7C465.1 486.7 460.2 498.9 450.2 506C440.3 513.1 427.2 514 416.5 508.3L288.1 439.8L159.8 508.3C149 514 135.9 513.1 126 506C116.1 498.9 111.1 486.7 113.2 474.7L137.8 328.1L33.58 225.9C24.97 217.3 21.91 204.7 25.69 193.1C29.46 181.6 39.43 173.2 51.42 171.5L195 150.3L259.4 17.97C264.7 6.954 275.9-.0391 288.1-.0391C300.4-.0391 311.6 6.954 316.9 17.97L381.2 150.3z"/>
+          </svg>
+        </div>
+        <div class="">
+          <p class="text-slate-400">
+            {{review?.rating || 0}} out of 5 stars
+          </p>
+        </div>
+      </div>
+      </form>
+      
+      <div class="w-full gap-3 flex flex-col items-center justify-center">
+        <app-button class="rounded w-full" *ngIf="!review?.id" (click)="createreview()" [class]=" ' w-full px-4 py-1.5 cursor-pointer rounded bg-blue-500 text-white transition duration-200 hover:bg-white hover:text-black border-2 border-transparent hover:border-teal-500 ' "
+          [txt]="'Create Review'"
+          [isloading]="createupdateloading">
+        </app-button>
+        <app-button class="rounded w-full" *ngIf="review?.id" (click)="updatereview()"  [class]=" ' w-full px-4 py-1.5 cursor-pointer rounded bg-blue-500 text-white transition duration-200 hover:bg-white hover:text-black border-2 border-transparent hover:border-teal-500 ' "
+          [txt]="' Update Review'"
+          [isloading]="createupdateloading" >
+        </app-button>
+      </div>
+  </div> 
+</app-alert>
+<!-- for rating alert -->
+<app-alert [size]="2" [title]="'Payment'" [alert]="(utlityService.getalert() == 'payment')" (close)="utlityService.hidealert()">
+  <div *ngIf="sitemanage?.paymenttype == 1">
+      <p>pay by cash onn deleivery</p>
+  </div>
+  <div *ngIf="sitemanage?.paymenttype == 2" class="p-3 sm:p-5 w-full min-h-full flex flex-col gap-3 items-start justify-between ">
+      <p>{{sitemanage?.paymentinfo}}</p>
+    <form [formGroup]="paymentForm" class="w-full flex flex-col gap-3 items-start justify-center ">
+      <!-- review txt Section -->
+      <div class="w-full mb-2">
+            <textarea name="txn"
+            formControlName="txn" 
+            [ngClass]="{
+                       'is-invalid':
+                       (ff.txn.errors && ff.txn.touched) ||
+                       (ff.txn.errors && submitted)
+                     }"
+            id="txn"
+            rows="7" class="w-full border-1 rounded p-3 " placeholder="আপনার txn লিখুন।"></textarea>
+      </div>
+      </form>
+      <div class="w-full gap-3 flex flex-col items-center justify-center">
+        <app-button class="rounded w-full" (click)="settxn()" [class]=" ' w-full px-4 py-1.5 cursor-pointer rounded bg-blue-500 text-white transition duration-200 hover:bg-white hover:text-black border-2 border-transparent hover:border-teal-500 ' "
+          [txt]="'Create Review'"
+          [isloading]="createupdateloading">
+        </app-button>
+      </div>
+  </div> 
+</app-alert>
+<!-- cancel confiramation alert-->
+<app-alert [title]="'Confirm'" [alert]="(utlityService.getalert() == 'cancle')" (close)="utlityService.hidealert()">
+  <div *ngIf="selectedorder" class="w-full min-h-full p-3 flex flex-col items-center justify-between sm:justify-center ">
+  <div class="sm:flex sm:items-start">
+      <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-green-100 sm:mx-0 sm:h-10 sm:w-10">
+          <svg class="h-6 w-6 text-green-600" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+      </div>
+      <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left space-y-3">
+           <p class=" text-gray-900">
+             আপনি ৩০ মিনিটের মধ্যে অর্ডার বাতিল করতে পারবেন।
+            </p>
+            <p class="flex items-center justify-center sm:justify-start gap-2"> 
+              <svg fill="currentColor" class="size-4.5 text-gray-400" viewBox="0 0 16 16">
+                <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9z"/>
+                <path d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1zm1.038 3.018a6 6 0 0 1 .924 0 6 6 0 1 1-.924 0M0 3.5c0 .753.333 1.429.86 1.887A8.04 8.04 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5M13.5 1c-.753 0-1.429.333-1.887.86a8.04 8.04 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1"/>
+              </svg>
+              {{accountService.getMinutesPassed(selectedorder?.date)}}
+            </p>
+      </div>
+  </div>
+  <div class="w-full mt-10 sm:flex sm:flex-row-reverse">
+      <span class="flex w-full rounded shadow-sm sm:ml-3 sm:w-auto">
+          <button (click)="ordercancel(null,true)" type="button"
+              class="  cursor-pointer px-4 w-full rounded bg-blue-500 py-1.5 text-blue-50 hover:bg-blue-600 ">
+              বাতিল করুন
+          </button>
+      </span>
+  </div>
+  </div>
+</app-alert>
+<!-- return confiramation alert-->
+<app-alert [size]="2" [title]="'Product return'" [alert]="(utlityService.getalert() == 'return')" (close)="this.utlityService.hidereviewalert()">
+  <div class="p-3 sm:p-5 w-full min-h-full flex flex-col gap-3 items-start justify-between ">
+    <p *ngIf="selectedorderitem?.returned != 1" class=" text-gray-900">
+             আপনি ৭ দিনের মধ্যে অর্ডার ফিরত দিতে পারবেন।
+            </p>
+            <p *ngIf="selectedorderitem?.returned == 1" class=" text-gray-900">
+             অর্ডার ফিরত এর কাজ চলছে।
+            </p>
+            <div *ngIf="!timecheck(selectedorder?.date, true)" class="">
+      <p>সাত দিন পর ফিরত দিতে পারবেন না।</p>
+    </div>
+    <form *ngIf="timecheck(selectedorder?.date, true)" [formGroup]="returnForm" class="w-full flex flex-col gap-3 items-start justify-center ">
+      <div class="w-full mb-2">
+            <textarea name="txt"
+            formControlName="txt" 
+            [ngClass]="{
+                       'is-invalid':
+                       (fff.txt.errors && fff.txt.touched) ||
+                       (fff.txt.errors && submitted)
+                     }"
+            id="review"
+            rows="7" class="w-full border-1 rounded p-3 " placeholder="রিটান করার কারন।"></textarea>
+      </div>
+      </form>
+      <div class="w-full gap-3 flex flex-col items-center justify-center">
+        <app-button class="rounded w-full" (click)="orderreturn(null,null,true)" [class]=" ' w-full px-4 py-1.5 cursor-pointer rounded bg-blue-500 text-white transition duration-200 hover:bg-white hover:text-black border-2 border-transparent hover:border-teal-500 ' "
+          [txt]="'Set Return'">
+        </app-button>
+      </div>
+  </div> 
+</app-alert>
+<div infiniteScroll
+[infiniteScrollDistance]="1"
+[infiniteScrollUpDistance]="3"
+[infiniteScrollThrottle]="300"
+(scrolled)="getcustomerorders()" [ngClass]="orders?.length > 1 ? ' lg:grid-cols-2 ' : ''" class="w-full items-start justify-start grid grid-cols-1 gap-3 p-3">
+  <div *ngFor="let order of orders; let i = index" class="mb-3 w-full relative rounded  ">
+    <div class="w-full rounded-t border-x border-t border-gray-100 flex items-center justify-between p-3 ">
+      <p class=" mt-1 ">
+        Total <span class="font-bold">{{order.orderitems?.length}}</span>
+      </p>
+    </div>
+  <div class=" w-full bg-white border border-gray-200 rounded rounded-t-none ">
+    <div *ngFor="let item of order.orderitems; let i = index" class="w-full flex flex-col items-center justify-start gap-3 p-3 border-b border-gray-100 ">
+      <div [routerLink]="['/product', item?.puid]" class="w-full flex items-start justify-start gap-3">
+        <img [routerLink]="['/product', item?.puid]" src="{{ item?.img}}" alt="" 
+          class="bg-gray-50 w-30 h-auto rounded"
+          loading="lazy">
+        <div class="space-y-1 ">
+          <h2 class="sm:text-lg font-bold text-gray-800">{{ item?.name?.split(' ')?.slice(0, 3)?.join(' ') }}</h2>
+          <p class=""><span class="font-bold">{{(item.sprice*item.quantity).toFixed(0)}} /-</span>
+          <span *ngIf="item.price && item.sprice" class="">, <span class="px-1">{{((item?.price - item?.sprice) / item?.price * 100).toFixed(0)}}%</span>OFF</span>
+          </p>
+          <p class="">
+          <span class="uppercase font-bold">
+            <span *ngIf="item?.vname">{{item?.vname}},</span> {{item.quantity}}
+          </span>
+           item<span *ngIf="item.quantity > 1" >s</span>
+        </p>
+        </div>
+      </div>
+      <div class="w-full flex gap-3 items-end justify-end ">
+        <button [ngClass]="item?.isr == 1 ? 'bg-blue-500  text-white ' : ' text-yellow-500 '"
+          (click)="addeditreview(order, item)"
+          class="p-1.5 px-2 border border-gray-200 rounded cursor-pointer flex items-center justify-center text-center transition-all duration-200 hover:opacity-90">
+          <svg fill="currentColor" class="size-4" viewBox="0 0 16 16">
+           <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+          </svg>
+        </button>
+        <button (click)="orderreturn(order,item,false)" [ngClass]="item?.returned == 1 ? 'bg-blue-500 text-white ' : ' text-blue-500 '" class=" border border-gray-200  rounded flex items-center justify-center text-center cursor-pointer p-1.5 px-2 ">
+          <svg fill="currentColor" class="size-4 rotate-180 " viewBox="0 0 16 16">
+            <path d="M5.921 11.9 1.353 8.62a.72.72 0 0 1 0-1.238L5.921 4.1A.716.716 0 0 1 7 4.719V6c1.5 0 6 0 7 8-2.5-4.5-7-4-7-4v1.281c0 .56-.606.898-1.079.62z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+          <div class="w-full p-3 ">
+<div class="w-full ">
+      <div class="w-full flex flex-col gap-3 items-center justify-end ">
+        <div class="w-full flex items-start justify-center ">
+          <div class="w-full text-left space-y-3">
+              <p class="">{{order?.name}}</p>
+              <p class="">{{order?.phone}}</p>
+          </div>
+          <div class="w-full text-right space-y-3">
+              <p class="uppercase">Id : {{order?.uid}}</p>
+              <p class="">{{ order?.date | date }}</p>
+          </div>
+        </div>
+        <div class="w-full flex flex-col items-start justify-center ">
+          <p class="">{{order?.region}} / {{order?.city}} / {{order?.zone}}</p>
+          <p class="cursor-pointer " (click)="toggleAddress(order?.id+'address')" (mouseenter)="toggleAddress(order?.id+'address')" (mouseleave)="showFull = null">
+            Address : {{ showFull == order?.id+'address' ? order?.address : (order?.address | slice:0:20) + (order?.address?.length > 20 ? '...' : '') }}
+          </p>
+        </div>
+        <div class="w-full flex flex-col items-center justify-center space-y-3">
+          <div class="w-full flex justify-between">
+              <p class="">Subtotal</p>
+              <p><span class="font-bold ">{{order?.subtotal}} /-</span></p>
+          </div>
+          <div *ngIf="order?.ctitle && order?.cvalue" class="w-full flex justify-between">
+            <p class="">Coupon</p>
+            <p class="">{{order?.ctitle}}, <span class="pl-1 text-red-500">- {{order?.cvalue}} /-</span> </p>
+          </div>
+          <div class="w-full flex justify-between">
+              <p class="">Delivery Fee</p>
+              <p><span class="font-bold ">{{order?.delivery}} /-</span></p>
+          </div>
+          <div class="w-full flex justify-between">
+              <p class="">Total</p>
+              <p><span class="font-bold ">{{order?.total}} /-</span></p>
+          </div>
+          <div *ngIf="order?.txn" class="w-full flex justify-between">
+              <p class="">Translation</p>
+              <p><span class="font-bold ">{{order?.txn}} /-</span></p>
+          </div>
+          <div *ngIf="order?.ispaid == 1" class="w-full flex justify-between text-end">
+              <p class="min-w-[90px] text-start">Payment </p>
+              <p><span class="font-bold text-emerald-500 text-end">Confirm</span></p>
+          </div>
+        </div>
+     </div>
+      <div [ngClass]="'border'+getClass(order)" class="mt-5 p-3 border-2 rounded w-full flex items-center justify-between">
+          <div class="capitalize flex items-center justify-start gap-3">
+            <div [ngClass]="'text'+getClass(order)" class="flex items-center justify-start gap-1.5">
+              <span [ngClass]="'bg'+getClass(order)" class="size-2 rounded-full"></span>
+             {{order?.status}}
+            </div>
+          </div>
+          <div *ngIf="order?.status != 'cancled' && order?.status != 'rejected'" class="flex flex-wrap items-center justify-end gap-3">
+            <button (click)="setPayment(order)" [class]=" order?.ispaid == 1 ? ' text-emerald-500 ' : ' text-gray-400 ' " class="border border-gray-200  rounded flex items-center justify-center text-center cursor-pointer p-1.5 px-2 ">
+              <svg fill="currentColor" class="size-4" viewBox="0 0 16 16">
+                <path d="M0 3a2 2 0 0 1 2-2h13.5a.5.5 0 0 1 0 1H15v2a1 1 0 0 1 1 1v8.5a1.5 1.5 0 0 1-1.5 1.5h-12A2.5 2.5 0 0 1 0 12.5zm1 1.732V12.5A1.5 1.5 0 0 0 2.5 14h12a.5.5 0 0 0 .5-.5V5H2a2 2 0 0 1-1-.268M1 3a1 1 0 0 0 1 1h12V2H2a1 1 0 0 0-1 1"/>
+              </svg>
+            </button>
+            <button *ngIf="timecheck(order?.date)" (click)="ordercancel(order,false)" [class]=" ' text-red-500 cursor-pointer ' " class=" border border-gray-200  rounded flex items-center justify-center text-center cursor-pointer p-1.5 px-2 ">
+              <svg fill="currentColor" class="size-4 " viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+              </svg>
+            </button>
+          </div>
+    </div>
+     </div>
+      </div>
+  </div>
+  </div>
+</div>

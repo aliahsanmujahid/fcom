@@ -1,0 +1,134 @@
+<app-alert [title]="'Delete'" [alert]="(utlityService.getalert() == 'delete')" (close)="utlityService.hidealert()">
+  <div class="w-full h-full flex flex-col justify-between p-2 bg-white">
+    <img class="w-full h-auto object-cover rounded object-cover " src="{{ deleteItem?.image}}" alt="">
+    <div class="p-2">
+    <h2 class="font-bold text-lg mb-1">{{deleteItem?.name}}</h2>
+    <p *ngIf="deleteItem?.maincate" class="text-sm text-gray-600 mb-2 ">Category - {{deleteItem?.maincate}}</p>
+    <div class="flex w-full gap-2">
+      <button class="w-full py-2 rounded bg-emerald-500 text-white text-xs" (click)="deteteConfirm()">
+        CONFIRM
+      </button>
+      <button class="w-full py-2 rounded bg-red-500 text-white text-xs" (click)="utlityService.hidealert()">
+        CANCEL
+      </button>
+    </div>
+    </div>
+    </div>
+</app-alert>
+<app-alert [size]="2" [title]="(f.id.value > 0) ? 'Update Category' : 'Add Category'" [alert]="(utlityService.getalert() == 'showcate')" (close)="utlityService.hidealert()">
+    <form [formGroup]="cateForm" (ngSubmit)="catecreate()" 
+      class="p-3 flex w-full min-h-full flex-col gap-3 justify-between ">
+  <div class="w-full space-y-3 ">
+      <div class="space-y-3 ">
+      <input formControlName="image" type="text" name="image" id="image"
+    placeholder="Image Link" 
+    [ngClass]="{
+      'is-invalid': (f.image.errors && f.image.touched) || (f.image.errors && submitted)
+    }"
+    class="rounded px-3 py-2 border border-gray-300 w-full">
+  </div>    
+  <div class="space-y-3 ">
+      <input formControlName="name" type="text" name="name" id="name"
+    placeholder="Category name" 
+    [ngClass]="{
+      'is-invalid': (f.name.errors && f.name.touched) || (f.name.errors && submitted)
+    }"
+    class="rounded px-3 py-2 border border-gray-300 w-full">
+  </div>
+  </div>
+  <div class="flex gap-3 mt-3">
+    <button type="submit" 
+      class="rounded py-2 px-4 text-white bg-blue-700 hover:bg-blue-800 w-full">
+      {{ (f.id.value > 0) ? 'Update' : 'Add' }}
+    </button>
+  </div>
+
+</form>
+</app-alert>
+<app-alert [size]="2" [title]="(ff.id.value > 0) ? 'Update SubCategory' : 'Add SubCategory'" [alert]="(utlityService.getalert() == 'showsubcate')" (close)="utlityService.hidealert()">
+    <form [formGroup]="subcateForm" (ngSubmit)="subcatecreate()" class="flex w-full  min-h-full p-3 flex-col gap-3 justify-between">
+  <div class="space-y-3">
+      <select formControlName="cateid" [ngClass]="{
+          'is-invalid':
+          (ff.cateid.errors && ff.cateid.touched) ||
+          (ff.cateid.errors && subsubmitted)}" class=" rounded px-3 py-2 border border-gray-300 w-full " name="cateid" id="cateid">
+          <option class="text-red-500" value="" disabled>Select main category</option>
+          <option *ngFor="let c of categoryes" value="{{ c.id }}" >{{ c.name }}</option>
+        </select>
+  <input formControlName="image" type="text" name="image" id="image"
+    placeholder="Image Link" 
+    [ngClass]="{
+      'is-invalid': (ff.image.errors && ff.image.touched) || (ff.image.errors && subsubmitted)
+    }"
+    class="rounded px-3 py-2 border border-gray-300 w-full">
+    <input formControlName="name" type="text" name="name" id="name"
+    placeholder="Subcategory name" 
+    [ngClass]="{
+      'is-invalid': (ff.name.errors && ff.name.touched) || (ff.name.errors && subsubmitted)
+    }"
+    class="rounded px-3 py-2 border border-gray-300 w-full">
+  </div>
+  <div class="flex gap-3 mt-3">
+    <button type="submit" 
+      class="rounded py-2 px-4 text-white bg-blue-700 hover:bg-blue-800 w-full">
+      {{ (ff.id.value > 0) ? 'Update' : 'Add' }}
+    </button>
+  </div>
+  </form>
+</app-alert>
+<div class="w-full flex flex-col gap-5 items-center justify-center">
+ <div  (click)="utlityService.showalert('showcate')" class="group  w-full">
+  <div class=" w-full text-center text-xl text-blue-500 rounded p-3 group-hover:border-gray-400 border-2 border-gray-300 border-dashed ">
+      <p class="group-hover:font-bold">Add Category</p>
+     </div>
+ </div>
+  <div class="w-full grid gap-4 mb-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+   <div *ngFor="let item of categoryes" class="w-full flex flex-col justify-between p-2 bg-white rounded shadow">
+    <img class="w-full h-auto object-cover rounded object-cover " src="{{item?.image}}" alt="">
+    <div class="p-2">
+    <h2 class="font-bold text-lg mb-2">{{item.name}}</h2>
+    <div class="flex w-full gap-2">
+      <button class="w-full py-2 rounded bg-emerald-500 text-white text-xs" (click)="editcate(item)">
+        EDIT
+      </button>
+      <button class="w-full py-2 rounded bg-red-500 text-white text-xs" (click)="deletecate(item,'cate')">
+        DELETE
+      </button>
+    </div>
+    </div>
+    </div>
+</div>
+ <div  (click)="utlityService.showalert('showsubcate')" class="group  w-full">
+  <div class=" w-full text-center text-xl text-blue-500 rounded p-3 group-hover:border-gray-400 border-2 border-gray-300 border-dashed ">
+      <p class="group-hover:font-bold">Add Subcategory</p>
+     </div>
+ </div>
+    <div class="w-full grid gap-4 mb-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+   <ng-container *ngFor="let c of categoryes">
+    <ng-container *ngIf="c?.subcate?.length > 0" >
+    <div *ngFor="let item of c.subcate" class="w-full flex flex-col justify-between p-2 bg-white rounded shadow">
+    <img class="w-full h-auto object-cover rounded object-cover " src="{{item?.image}}" alt="">
+    <div class="p-2">
+    <h2 class="font-bold text-lg mb-1">{{item.name}}</h2>
+    <p class="text-sm text-gray-600 mb-2">Category - {{c.name}}</p>
+    <div class="flex w-full gap-2">
+      <button class="w-full py-2 rounded bg-emerald-500 text-white text-xs" (click)="editsubcate(item)">
+        EDIT
+      </button>
+      <button class="w-full py-2 rounded bg-red-500 text-white text-xs" (click)="deletecate(item,'sub',c)">
+        DELETE
+      </button>
+    </div>
+    </div>
+    </div>
+  </ng-container>
+  </ng-container>
+</div>
+</div>
+
+
+
+
+
+
+

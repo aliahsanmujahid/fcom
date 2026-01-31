@@ -1,0 +1,193 @@
+<app-alert [title]="'Delete'" [alert]="alert1" (close)="alert1 = $event">
+  <div class="flex flex-col justify-center items-center min-h-full w-full gap-3">
+    <p class=" ">Want To Delete :  {{deleteItem?.code}}</p>
+    <div class=" justify-center">
+      <button class="py-1 px-3  text-white bg-blue-700 
+      hover:bg-blue-800  " (click)="deletecopun(null,true)">Confirm</button>
+    </div>
+  </div>
+</app-alert>
+<app-alert [size]="2" [title]="f.id.value > 0 ? ' Update Coupon ' : ' Create Coupon ' " [alert]="alert" (close)="alert = $event">
+ <div class="w-full min-h-full flex items-center justify-center p-3">
+  <form [formGroup]="couponform" (ngSubmit)="creatcopun()" class="flex w-full flex-col justify-between gap-3">
+  <div class="w-full flex flex-col gap-3 items-center ">
+    <div class="form-group flex flex-col w-full">
+      <label for="phone" class="block text-gray-900 mb-2" for="Name">Customer Phone Number</label>
+      <input type="text" class="rounded px-2 py-1.5 border border-gray-300" name="phone" id="phone"
+        formControlName="phone" [ngClass]="{
+          'is-invalid':
+          (f.phone.errors && f.phone.touched) ||
+          (f.phone.errors && submitted)
+        }" placeholder="Customer Phone Number"  >
+    </div>
+    <div class="form-group flex flex-col w-full">
+      <label for="time" class="block text-gray-900 mb-2" for="Name">Coupon Expiry Date</label>
+      <input type="date" class="rounded px-2 py-1.5 border border-gray-300" name="time" id="time"
+        formControlName="time" [ngClass]="{
+          'is-invalid':
+          (f.time.errors && f.time.touched) ||
+          (f.time.errors && submitted)
+        }" placeholder="Coupon Expiry Date"  >
+    </div>
+    <div class="form-group flex flex-col w-full">
+      <label for="ulimit" class="block text-gray-900 mb-2" for="ulimit">Coupon limit</label>
+      <input type="number" class="rounded px-2 py-1.5 border border-gray-300" name="ulimit" id="ulimit"
+        formControlName="ulimit" [ngClass]="{
+          'is-invalid':
+          (f.ulimit.errors && f.ulimit.touched) ||
+          (f.ulimit.errors && submitted)
+        }" placeholder="Limit"  >
+    </div>
+    <div class="form-group flex flex-col w-full">
+      <label for="code" class="block text-gray-900 mb-2" for="Name">Coupon Code</label>
+      <input type="text" class="rounded px-2 py-1.5 border border-gray-300" name="code" id="code"
+        formControlName="code" [ngClass]="{
+          'is-invalid':
+          (f.code.errors && f.code.touched) ||
+          (f.code.errors && submitted)
+        }" placeholder="Coupon Code"  >
+    </div>
+    <div class="form-group flex flex-col w-full">
+      <label for="value" class="block text-gray-900 mb-2" for="Name">Coupon Value</label>
+      <input type="number" class="rounded px-2 py-1.5 border border-gray-300" name="value" id="value"
+        formControlName="value" [ngClass]="{
+          'is-invalid':
+          (f.value.errors && f.value.touched) ||
+          (f.value.errors && submitted)
+        }" placeholder="Coupon Value"  >
+    </div>
+    <div class="form-group flex flex-col w-full">
+      <label for="minp" class="block text-gray-900 mb-2" >Minimun Buy</label>
+      <input type="number" class="rounded px-2 py-1.5 border border-gray-300" name="minp" id="minp"
+        formControlName="minp" [ngClass]="{
+          'is-invalid':
+          (f.minp.errors && f.minp.touched) ||
+          (f.minp.errors && submitted)
+        }" placeholder="Minimun Product"  >
+    </div>
+    <div class="form-group flex flex-col w-full">
+      <label for="minc" class="block text-gray-900 mb-2" >Minimun Product Count</label>
+      <input type="number" class="rounded px-2 py-1.5 border border-gray-300" name="minc" id="minc"
+        formControlName="minc" [ngClass]="{
+          'is-invalid':
+          (f.minc.errors && f.minc.touched) ||
+          (f.minc.errors && submitted)
+        }" placeholder="Minimun Product Count"  >
+    </div>
+  </div>
+  <div class="flex gap-3 mt-3">
+    <button type="submit" 
+      class="rounded py-2 px-4 text-white bg-blue-700 hover:bg-blue-800 w-full">
+      {{ (f.id.value > 0) ? 'Update' : 'Add' }}
+    </button>
+  </div>
+  </form>
+</div>
+</app-alert>
+
+
+<div class="w-full flex flex-col gap-3 items-center justify-between">
+  <!-- Search Bar -->
+  <div class="w-full flex flex-wrap lg:flex-nowrap gap-3">
+  <form [formGroup]="searchForm" (ngSubmit)="search()" autocomplete="off" class="w-full flex flex-col gap-6 lg:flex-row lg:items-center">
+    <input
+      formControlName="phone"
+      [placeholder]="' Phone number ' "
+      name="phone"
+      id="phone"
+      [ngClass]="{
+    'is-invalid':
+    (ff.phone.errors && ff.phone.touched) ||
+    (ff.phone.errors && submitted2)}"
+      type="text"
+      class="flex-1 rounded border border-gray-300 px-4 py-2"
+    />
+    <!-- Select input -->
+    <select
+      formControlName="stype"
+      name="stype"
+      id="stype"
+      [ngClass]="{
+        'is-invalid': (ff.stype.errors && ff.stype.touched) 
+        || (ff.stype.errors && submitted)
+      }"
+      class="rounded border border-gray-300 px-4 py-2 w-full lg:w-48"
+    >
+      <option value="">Select Type</option>
+      <option value="all">All</option>
+      <option value="exp">Expired</option>
+      <option value="act">Active</option>
+    </select>
+    <button
+      type="submit"
+      class="w-full lg:w-40 bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700"
+    >
+      Search
+    </button>
+    <button
+      type="button"
+      (click)="reset()"
+      class="w-full lg:w-40 bg-gray-200 text-gray-700 px-5 py-2 rounded hover:bg-gray-300"
+    >
+      Reset
+    </button>
+  </form>
+  </div>
+  <div (click)="alerttoggle()" class="group  w-full">
+  <div class=" w-full text-center text-xl text-blue-500 rounded p-3 group-hover:border-gray-400 border-2 border-gray-300 border-dashed ">
+      <p class="group-hover:font-bold">Add Coupons</p>
+     </div>
+  </div>
+  <div class="w-full grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+<div *ngFor="let item of copuns" class="border border-gray-300 rounded-lg p-4 flex flex-col gap-3 bg-white w-full sm:w-auto">
+  <div *ngIf="item?.coupon_phone" class="flex items-center justify-center gap-2 bg-emerald-50 py-1 px-2 rounded w-full break-words">
+    <p class="font-semibold text-emerald-600 text-center">{{item?.coupon_phone}}</p>
+  </div>
+  <div class="flex items-center justify-center gap-2 bg-emerald-50 py-1 px-2 rounded w-full break-words">
+    <p class="font-semibold text-emerald-600 text-center">{{item?.code}}</p>
+    <button (click)="copyTxt(item?.code)" class="text-emerald-600 hover:text-emerald-800">
+      <svg fill="currentColor" class="size-4.5 " viewBox="0 0 16 16">
+       <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z"/>
+        <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z"/>
+      </svg>
+    </button>
+  </div>
+  <div class="grid grid-cols-2 gap-2 text-center">
+    <div class="bg-gray-50 rounded p-2">
+      <p class="text-xs text-gray-500">Value</p>
+      <p class="font-semibold text-gray-800">{{item?.value}}</p>
+    </div>
+    <div class="bg-gray-50 rounded p-2">
+      <p class="text-xs text-gray-500">Minimum Buy</p>
+      <p class="font-semibold text-gray-800">{{item?.minp}}</p>
+    </div>
+    <div class="bg-gray-50 rounded p-2">
+      <p class="text-xs text-gray-500">Minimum Product</p>
+      <p class="font-semibold text-gray-800">{{item?.minc}}</p>
+    </div>
+    <div class="bg-gray-50 rounded p-2">
+      <p class="text-xs text-gray-500">Limit</p>
+      <p class="font-semibold text-gray-800">{{item?.ulimit}}</p>
+    </div>
+  </div>
+  <div class="flex w-full gap-2 mt-auto">
+    <button class="w-1/2 py-2 rounded bg-emerald-500 text-white text-xs"
+            (click)="updatetoggle(item)">
+      EDIT
+    </button>
+    <button class="w-1/2 py-2 rounded bg-red-500 text-white text-xs"
+            (click)="deletecopun(item,false)">
+      DELETE
+    </button>
+  </div>
+</div>
+</div>
+  <div class="mt-3 w-full flex items-end justify-end ">
+  <button (click)="loadmore()" [disabled]="nomore" class="cursor-pointer rounded px-3 py-1.5 " >
+     <svg fill="currentColor" class="size-5 text-white" viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
+      <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
+    </svg>
+  </button>
+</div>
+</div>

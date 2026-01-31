@@ -1,0 +1,26 @@
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
+    <div *ngFor="let i of data" class="bg-blue-50 rounded p-3 flex flex-col items-center justify-start">
+      <div *ngFor="let j of i.items" class="w-full flex items-center justify-between">
+       <p class="text-blue-500">{{ j?.name }}</p>
+       <div class="text-end">
+        <p [ngClass]="
+                j?.tv <= 0 ? 'text-red-500' :
+                j?.redcolor ? 'text-red-500' :
+                j?.color ? 'text-emerald-500' : 'text-gray-800'
+              " class="text-end">
+              {{ j?.tv }}
+          <span *ngIf="j?.l" class="text-blue-500">, {{j?.l}} {{ j?.cv }}</span> 
+          <span *ngIf="j?.p != null" [ngClass]="j?.p > 0 ? ' text-green-600 ': ' text-red-600 ' ">, {{ j?.p?.toFixed(0) }} %</span>
+        </p>
+       </div>
+      </div>
+      <div *ngIf="i?.tv != null" class="w-full flex items-center justify-between">
+       <p class="text-blue-500">{{ i?.name }}</p>
+       <div class="text-end">
+        <p class="text-end">
+            {{ i?.tv }}
+        </p>
+       </div>
+      </div>
+    </div>
+  </div>

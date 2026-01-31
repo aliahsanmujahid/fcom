@@ -1,0 +1,232 @@
+<app-alert [title]="'Change Status'" [alert]="utlityService.getalert() == 'statuschange'" (close)="utlityService.hidealert()">
+  <div class="p-3 text-center w-full min-h-full ">
+    <div *ngIf="selectedorder" class="w-full h-full flex flex-col justify-between " >
+      <div class="bg-gray-100 rounded p-2 mb-3 flex gap-3 items-center justify-center flex-wrap ">
+        <p>
+          <span class="text-blue-500">{{ selectedorder?.uid }}</span>
+        </p>
+        <span class="font-bold uppercase">{{ status }}</span>
+      </div>
+      <div class="w-full flex justify-center gap-3">
+        <button 
+          (click)="changestatus()" 
+          class="w-full px-4 py-1 rounded bg-blue-600 hover:bg-blue-700 text-white font-medium"
+        >
+          Continue
+        </button>
+        <button 
+          class="w-full px-4 py-1 rounded bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium"
+          (click)="utlityService.hidealert()"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+    <div *ngIf="!selectedorder && allids.length > 0" class="w-full h-full flex flex-col justify-between " >
+      <div class="bg-gray-100 rounded p-2 mb-3 flex gap-3 items-center justify-center flex-wrap ">
+        <p *ngFor="let item of allids; let i = index" (click)="copyTxt(allids)" >
+          <span class="text-blue-500">{{ item }}</span><span *ngIf="allids?.length > 1">, </span>
+        </p>
+        <span class="font-bold uppercase">{{ status2 }}</span>
+      </div>
+      <div class="w-full flex justify-center gap-3">
+        <button 
+          (click)="setallorderstatus(true)" 
+          class="w-full px-4 py-1 rounded bg-blue-600 hover:bg-blue-700 text-white font-medium"
+        >
+          Continue
+        </button>
+        <button 
+          class="w-full px-4 py-1 rounded bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium"
+          (click)="utlityService.hidealert()"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</app-alert>
+<app-alert [title]="'Sending Delivery'" [alert]="utlityService.getalert() == 'senddelivery'" (close)="utlityService.hidealert()">
+  <div class="p-3 text-center w-full min-h-full ">
+    <div *ngIf="allids.length > 0" class="w-full h-full flex flex-col justify-between " >
+      <div class="bg-gray-100 rounded p-2 mb-3 flex gap-3 items-center justify-center flex-wrap ">
+        <p *ngFor="let item of allids; let i = index" (click)="copyTxt(allids)" >
+          <span class="text-blue-500">{{ item }}</span><span *ngIf="allids?.length > 1">, </span>
+        </p>
+        <span class="font-bold uppercase">Sending To delivery</span>
+      </div>
+      <div class="w-full flex justify-center gap-3">
+        <button 
+          (click)="sendalltodelivery(true)" 
+          class="w-full px-4 py-1 rounded bg-blue-600 hover:bg-blue-700 text-white font-medium"
+        >
+          Continue
+        </button>
+        <button 
+          class="w-full px-4 py-1 rounded bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium"
+          (click)="utlityService.hidealert()"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</app-alert>
+<div class="w-full flex flex-col items-center justify-center ">
+  <!-- top part  -->
+ <div class="p-3 w-full flex flex-col lg:flex-row lg:flex-wrap items-stretch lg:items-center justify-between gap-3 rounded border border-gray-200 bg-white"
+>
+  <div class="flex flex-col lg:flex-row flex-wrap items-stretch lg:items-center gap-3 w-full lg:w-auto">
+    <div class="flex items-center justify-start gap-3">
+    <label for="checkbox" class="w-auto flex items-start sm:items-center gap-2 bg-white cursor-pointer uppercase text-sm font-medium text-gray-700">
+    <input 
+    [disabled]="orders?.length == 0" 
+    (change)="onCheckAll($event)"
+    type="checkbox" 
+    id="checkbox" 
+    name="checkbox" 
+    [checked]="(allids?.length == orders?.length)" 
+    class="w-5 h-5 cursor-pointer text-green-600 bg-gray-100 border-gray-300 rounded outline-none flex-shrink-0"
+    ></label>
+    <select 
+      name="format" 
+      (change)="statusChange($event)"
+      id="format" 
+      class="w-full lg:w-auto rounded px-3 py-1 text-sm uppercase border border-gray-300 outline-none"
+    >
+      <option *ngFor="let s of setstatus" value="{{ s.name }}">{{ s.name }}</option>
+    </select>
+    <button (click)="setallorderstatus(false)" [class]="allids.length > 0 ? ' text-emerald-500 border-emerald-200 ' : ' text-gray-400 border-gray-200 ' "  class=" border rounded flex items-center justify-center text-center cursor-pointer p-1.5 ">
+      <svg fill="currentColor" class="size-4 " viewBox="0 0 16 16">
+       <path d="M12.354 4.354a.5.5 0 0 0-.708-.708L5 10.293 1.854 7.146a.5.5 0 1 0-.708.708l3.5 3.5a.5.5 0 0 0 .708 0zm-4.208 7-.896-.897.707-.707.543.543 6.646-6.647a.5.5 0 0 1 .708.708l-7 7a.5.5 0 0 1-.708 0"/>
+       <path d="m5.354 7.146.896.897-.707.707-.897-.896a.5.5 0 1 1 .708-.708"/>
+      </svg>
+    </button>
+    <button (click)="downloadAll()" [class]="allids.length > 0 ? ' text-emerald-500 border-emerald-200 ' : ' text-gray-400 border-gray-200 ' "  class=" border rounded flex items-center justify-center text-center cursor-pointer p-1.5 ">
+        <svg fill="currentColor" class="size-4 " viewBox="0 0 16 16">
+          <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"/>
+          <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z"/>
+        </svg>
+    </button>
+    <button (click)="sendalltodelivery(false)" [class]="allids.length > 0 ? ' text-emerald-500 border-emerald-200 ' : ' text-gray-400 border-gray-200 ' "  class=" border rounded flex items-center justify-center text-center cursor-pointer p-1.5 ">
+      Send To Delivery
+    </button>
+    </div>
+  </div>
+  <div class="w-full lg:max-w-[300px] flex items-center justify-center gap-3 rounded bg-white">
+  <form [formGroup]="searchform" (ngSubmit)="getorders()" autocomplete="off" class="relative w-full flex flex-col gap-10">
+      <input formControlName="search" 
+       [ngClass]="{
+       'is-invalid':(f.search.errors && f.search.touched) ||
+           (f.search.errors && submitted)}"
+           placeholder="By Customer/Order"
+           name="search"
+           id="search"
+           type="text"
+           class=" flex-1 rounded border border-gray-300 px-4 py-1 "/>
+    <button class="cursor-pointer absolute top-0 right-0 p-[8px] rounded-l text-sm font-medium text-white bg-blue-700 hover:bg-blue-800 outline-none"
+      (click)="getorders()"
+    >
+      <svg viewBox="0 0 24 24" fill="currentColor" class="size-4 text-white ">
+        <path fill-rule="evenodd" d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z" clip-rule="evenodd" />
+      </svg>
+    </button>       
+  </form>
+  <button class="cursor-pointer p-[7px] rounded text-sm font-medium border text-gray-400 border-gray-200 hover:border-blue-500 hover:text-blue-500"
+      (click)="reset()"
+    >
+    <svg fill="currentColor" class="size-4 " viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
+  <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
+</svg>
+  </button>
+  </div>
+</div>
+
+
+<div class="flex flex-col gap-3 py-3 w-full">
+
+<ng-container *ngIf="orders?.length > 0">
+  <div class="w-full flex flex-col items-center justify-start " *ngFor="let item of orders" >
+  <div (click)="selectitem(item?.uid)" class=" rounded-x rounded-t border border-gray-300 p-3 bg-white w-full flex items-center justify-between gap-3 ">
+  <div class="cursor-pointer flex flex-wrap items-center gap-4 uppercase w-auto">
+    <input (change)="onCheck($event)"
+           type="checkbox"  
+           value="{{item.uid}}" 
+           [checked]="chacked(item.uid)" 
+           id="{{item.uid}}" 
+           name="{{item.uid}}" 
+           class="cursor-pointer w-5 h-5 text-green-600 bg-gray-100 border-gray-300 rounded">
+    <p class="text-gray-700 font-medium">Id: <span class="font-normal">{{item.uid}}</span></p>
+  </div>
+  <p class="capitalize font-bold">
+    {{item?.ispaid == 1 ? 'Paid' : 'Not Paid'}}
+  </p>
+</div>
+ <div class="w-full flex gap-1 flex-col bg-gray-50 p-3 border-x border-b border-gray-200">
+      <p class="font-semibold">Order ID: <span (click)="copyTxt(item?.uid)" class="text-blue-500 cursor-pointer" >{{ item?.uid }}</span>, {{item?.status}}</p>
+      <ng-container>
+        <p >Customer: <span (click)="copyTxt(item?.customer?.uid)" class="text-blue-500 cursor-pointer" >{{ item?.customer?.uid  }}</span> | {{ item?.customer?.name }} | <span (click)="copyTxt(item?.customer?.phone)" class="text-blue-500 cursor-pointer" >{{ item?.customer?.phone }}</span></p>
+        <p class="font-semibold text-gray-800">{{item?.region}} / {{item?.city}} / {{item?.zone}}</p>
+        <p>Name: {{ item?.name }}</p>
+        <p>Phone: {{ item?.phone }}</p>
+        <p>Address: {{ item?.address }}</p>
+      </ng-container>
+      <p *ngIf="item?.ctitle">Coupon: {{ item?.ctitle }}</p>
+      <p *ngIf="item?.cvalue">Coupon Value: {{ item?.cvalue }} /-</p>
+      <p>Delivery: {{ item?.delivery }} /-</p>
+      <p>Subtotal: {{ item?.subtotal }} /-</p>
+      <p>Total: {{ item?.total }} /-</p>
+  </div>
+  <div *ngFor="let orderitem of item?.orderitems" class="w-full flex flex-col sm:flex-row items-start gap-4 p-3 bg-white border-t-0 border border-gray-200">
+    <div class="w-full sm:w-80 h-full sm:h-auto">
+      <img [src]="orderitem?.img" [alt]="" class="bg-gray-50 w-full h-full object-cover rounded border border-gray-300">
+    </div>
+    <div class="flex flex-col justify-between w-full gap-1">
+      <p class="font-semibold truncate max-w-[200px]">{{ orderitem?.name }}</p>
+        <span class="">Selling Price: {{ orderitem?.sprice }} /-</span>
+          <span class=""> Original Price: {{ orderitem?.price }} /-</span>
+          <p class="">
+            Discount:  ({{ ((orderitem?.price - orderitem?.sprice) / orderitem?.price * 100) | number:'1.0-0' }}% OFF)
+          </p>
+          <p class="text-gray-500">
+          Sku: {{ orderitem?.sku }} 
+          <span *ngIf="orderitem?.vname">, {{ orderitem?.vname }} ({{ orderitem?.vsku }})</span>
+        </p>
+        <p class="text-gray-500">
+         Qty: {{ orderitem?.quantity }} , Total: {{ orderitem?.totalprice }} /-
+        </p>
+    </div>
+  </div>
+    <div class="w-full flex gap-2 items-center justify-end mt-3 ">
+      <select name="format" (change)="statusChange($event,item)" id="format" class="w-auto rounded px-2 py-1 text-center border border-gray-300 uppercase">
+        <option *ngFor="let s of setstatus" value="{{ s.name }}" >{{ s.name }}</option>
+      </select>
+      <button (click)="downloadOrderAsHtml(item,'Order'+item?.id)" class=" border border-gray-200 text-gray-400 rounded flex items-center justify-center text-center cursor-pointer p-1.5 ">
+        <svg fill="currentColor" class="size-4 " viewBox="0 0 16 16">
+          <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"/>
+          <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z"/>
+        </svg>
+      </button>
+      <button (click)="txnconfirm(item)" class=" border border-gray-200 text-gray-400 rounded flex items-center justify-center text-center cursor-pointer p-1.5 ">
+        txn {{item?.txnc}}
+      </button>
+    </div>
+  <div class="w-full p-5 border-2 border-dashed border-slate-300 ">
+   
+  </div>
+  </div>
+
+<div class="mt-3 w-full flex items-end justify-end ">
+  <button (click)="getPagedOrder()" [class]="nomoreorder ? ' text-gray-400 border-gray-200 ' : ' text-emerald-500 border-emerald-200 '  " class=" border border-gray-200 text-gray-400 rounded flex items-center justify-center text-center cursor-pointer p-1.5 ">
+    <svg fill="currentColor" class="size-4 " viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
+      <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
+    </svg>
+  </button>
+</div>
+</ng-container>
+</div>
+
+<app-fail *ngIf="orders?.length == 0" class="w-full"></app-fail>
+

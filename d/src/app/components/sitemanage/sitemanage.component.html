@@ -1,0 +1,149 @@
+<app-alert [size]="1" [title]="'Shiping option'" [alert]="alert2" (close)="alert2 = $event">
+  <form [formGroup]="delivery" (ngSubmit)="createupdatedelivery()" class="p-3 flex w-full min-h-full flex-col items-center justify-between gap-3">
+  <div class="w-full flex flex-col gap-3">
+    <input formControlName="inside_city_charge" type="number" name="inside_city_charge" id="inside_city_charge"
+    placeholder="Inside city charge" 
+    [ngClass]="{
+      'is-invalid': (ff.inside_city_charge.errors && ff.inside_city_charge.touched) || (ff.inside_city_charge.errors && submitted)
+    }"
+    class="rounded px-3 py-2 border border-gray-300 w-full">
+  <input formControlName="outside_city_charge" type="number" name="outside_city_charge" id="outside_city_charge"
+    placeholder="Outside city charge" 
+    [ngClass]="{
+      'is-invalid': (ff.outside_city_charge.errors && ff.outside_city_charge.touched) || (ff.outside_city_charge.errors && submitted)
+    }"
+    class="rounded px-3 py-2 border border-gray-300 w-full"> 
+  <input id="extra_per_kg" name="extra_per_kg" formControlName="extra_per_kg" [ngClass]="{
+              'is-invalid':
+              (ff.extra_per_kg.errors && ff.extra_per_kg.touched) ||
+              (ff.extra_per_kg.errors && submitted2)
+            }"
+            type="number" placeholder="Extra per kg" 
+            class="rounded px-3 py-2 border border-gray-300 w-full">  
+  </div> 
+  <div class="w-full flex gap-3 mt-3">
+    <button type="submit" 
+      class="rounded py-2 px-4 text-white bg-blue-700 hover:bg-blue-800 w-full">
+      {{ (ff.id.value > 0) ? 'Update' : 'Add' }}
+    </button>
+  </div>
+  </form>
+</app-alert>
+ <div class="flex flex-col gap-3 p-3">
+   <div *ngIf="deliverydata" class="border border-gray-300 rounded p-4 flex flex-col gap-3 bg-white w-full sm:w-auto">
+  <div class="grid grid-cols-2 gap-2 text-center">
+    <div class="bg-gray-50 rounded p-2">
+      <p class="text-xs text-gray-500">Inside city charge</p>
+      <p class="font-semibold text-gray-800">{{deliverydata?.inside_city_charge}}</p>
+    </div>
+    <div class="bg-gray-50 rounded p-2">
+      <p class="text-xs text-gray-500">Outside city charge</p>
+      <p class="font-semibold text-gray-800">{{deliverydata?.outside_city_charge}}</p>
+    </div>
+  </div>
+  <div class="text-center bg-gray-50 rounded p-2">
+    <p class="text-xs text-gray-500">Extra per kg</p>
+    <p class="font-semibold text-gray-800">{{deliverydata?.extra_per_kg}}</p>
+  </div>
+  <div class="flex w-full gap-2 mt-auto">
+    <button class="w-full py-2 rounded bg-emerald-500 text-white text-xs"
+            (click)="alerttoggle2()">
+      EDIT
+    </button>
+  </div>
+</div>
+<div *ngIf="!deliverydata" class="w-full rounded p-5 border border-gray-200 flex items-center justify-center">
+    <button (click)="alerttoggle2()" 
+          class="cursor-pointer rounded bg-blue-800 hover:bg-blue-900 text-white px-8 py-2 uppercase tracking-wider border border-blue-900">
+      Shiping option
+    </button>
+</div>
+  <div class="border p-3 rounded border-gray-200 ">
+    <div class="details">
+      <form [formGroup]="form" (ngSubmit)="sitemanagesettings()" class="space-y-3">
+      <div class="">
+          <textarea formControlName="smskey" [ngClass]="{
+            'is-invalid':
+            (f.smskey.errors && f.smskey.touched) ||
+            (f.smskey.errors && submitted)
+          }"
+          name="smskey"
+          rows="4" 
+          id="smskey"
+          class="block my-1 p-2.5 w-full  text-gray-900 
+          rounded border border-gray-300" placeholder="Enter sms keys...">
+          </textarea>
+      </div>
+      <!-- payemnt -->
+       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+    <!-- Cash on Delivery -->
+    <div [ngClass]="f.paymenttype.value == 1 ? 'border-2 border-green-500 ' : ''"
+      (click)="setPaymentType(1)" class="border rounded p-6 text-center cursor-pointer
+             hover:border-green-500 hover:shadow-md transition"
+    >
+      <h3 class="text-lg font-semibold">Cash on Delivery</h3>
+    </div>
+    <!-- Manual Payment -->
+    <div [ngClass]="f.paymenttype.value == 2 ? 'border-2 border-green-500 ' : ''"
+      (click)="setPaymentType(2)" class="border rounded p-6 text-center cursor-pointer
+             hover:border-blue-500 hover:shadow-md transition"
+    >
+      <h3 class="text-lg font-semibold">Manual Pay</h3>
+    </div>
+    <!-- SSLCommerz -->
+    <div [ngClass]="f.paymenttype.value == 3 ? 'border-2 border-green-500 ' : ''"
+      (click)="setPaymentType(3)" class="border rounded p-6 text-center cursor-pointer
+             hover:border-purple-500 hover:shadow-md transition"
+    >
+      <h3 class="text-lg font-semibold">SSLCommerz</h3>
+    </div>
+  </div>
+      <!-- end payment -->
+      <div *ngIf="[2,3].includes(f.paymenttype.value)" class="">
+          <textarea formControlName="paymentinfo" [ngClass]="{
+            'is-invalid':
+            (f.paymentinfo.errors && f.paymentinfo.touched) ||
+            (f.paymentinfo.errors && submitted)
+          }"
+          name="paymentinfo"
+          rows="4" 
+          id="paymentinfo"
+          class="block my-1 p-2.5 w-full  text-gray-900 
+          rounded border border-gray-300" placeholder="Payment info...">
+          </textarea>
+      </div>
+      <div class="">
+          <textarea formControlName="masterkey" [ngClass]="{
+            'is-invalid':
+            (f.masterkey.errors && f.masterkey.touched) ||
+            (f.masterkey.errors && submitted)
+          }"
+          name="masterkey"
+          rows="4" 
+          id="masterkey"
+          class="block my-1 p-2.5 w-full  text-gray-900 
+          rounded border border-gray-300" placeholder="masterkey...">
+          </textarea>
+      </div>
+      <div class="">
+        <textarea formControlName="steadfast" [ngClass]="{
+            'is-invalid':
+            (f.steadfast.errors && f.steadfast.touched) ||
+            (f.steadfast.errors && submitted)
+          }"
+          name="steadfast"
+          rows="4" 
+          id="steadfast"
+          class="block my-1 p-2.5 w-full  text-gray-900 
+          rounded border border-gray-300" placeholder="steadfast info...">
+        </textarea>
+      </div>
+      <div class="mt-5 flex w-full gap-2">
+       <button class="w-full py-2 rounded bg-emerald-500 text-white text-xs">
+        {{this.f.id.value > 0 ?'Update Changes':'Save Changes'}}
+       </button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>

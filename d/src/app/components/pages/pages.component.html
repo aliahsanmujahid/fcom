@@ -1,0 +1,67 @@
+<app-alert [title]="'Delete'" [alert]="utlityService.getalert() == 'deletepage'" (close)="utlityService.hidealert()">
+  <div *ngIf="selectedpage" class="flex flex-col justify-center items-center min-h-full w-full gap-3">
+    <p class=" ">Want To Delete :  {{this.selectedpage?.name}}</p>
+    <div class=" justify-center">
+      <button class="py-1 px-3  text-white bg-blue-700 
+      hover:bg-blue-800 " (click)="deletepage(null,true)">Confirm</button>
+    </div>
+  </div>
+</app-alert>
+
+
+
+    <div class="mb-5 w-full flex items-center justify-between border border-gray-200 p-3 rounded gap-5 ">
+      <div>
+       <p *ngIf="!pageEdit">Total: {{ pages?.length }} {{ pages?.length > 1 ? 'Pages' : 'Page' }}</p>
+        <p *ngIf="pageEdit" >{{selectedpage ? this.selectedpage?.name : 'Set Name'}}</p>
+      </div>
+      <div class="flex gap-3 ">
+        <button *ngIf="!pageEdit" (click)="cretateedit()" class="bg-blue-500 text-white px-3 py-1 rounded text-sm">Add Page</button>
+        <button *ngIf="pageEdit" (click)="createpage()" class="rounded cursor-pointer py-1 px-3 text-center
+          text-white bg-blue-700 
+        hover:bg-blue-800 ">{{f.id.value ? 'Update' : 'Create'}}</button>
+        <button *ngIf="pageEdit" (click)="reset()" class="rounded cursor-pointer py-1 px-3 text-center
+          text-white bg-red-500 
+        hover:bg-red-800 ">Cancle</button>
+      </div>
+  </div>
+
+
+<div *ngIf="!pageEdit" class="flex flex-col gap-3 items-center w-full">
+ <div *ngFor="let page of pages" class="bg-white border border-gray-200 p-3 rounded gap-5 w-full flex-wrap flex items-center justify-between ">
+      <div>
+        {{page?.name}}
+        {{page?.ismain == 1 ? 'Main Page' : ''}}
+      </div>
+      <div class="flex flex-wrap gap-3 ">
+        <button (click)="cretateedit(page)" class="bg-emerald-500 text-white px-3 py-1 rounded text-sm">Set Layout</button>
+        <button (click)="deletepage(page,false)" class="bg-red-500 text-white px-3 py-1 rounded text-sm">Delete</button>
+        <button (click)="pageaction(page)" class="bg-blue-500 text-white px-3 py-1 rounded text-sm">Set Main</button>
+      </div>
+ </div> 
+</div>
+
+<main *ngIf="pageEdit" class="px-2 md:px-0  py-8 md:py-12">
+  <form [formGroup]="pageForm" (ngSubmit)="createpage()" autocomplete="off" class="w-full flex flex-col gap-3 ">
+    <input
+       formControlName="name" 
+       [ngClass]="{
+       'is-invalid':
+       (f.name.errors && f.name.touched) ||
+       (f.name.errors && submitted)}"
+           placeholder="Page name"
+           name="name"
+           id="name"
+           type="text"
+           class=" rounded px-2 py-1 text-gray-900 border border-gray-300"/>
+      <textarea formControlName="c"
+        name="c"
+        id="c"
+        rows="10" 
+        [ngClass]="{'is-invalid':(f.c.errors && f.c.touched) || (f.c.errors && submitted)}"
+          class="block p-2.5 w-full h-[300px]  text-gray-900 rounded border border-gray-300 " placeholder="Content...">
+    </textarea>
+  </form>
+</main>
+
+<app-fail *ngIf="pages?.length == 0 && !loading" class="w-full"></app-fail>

@@ -1,0 +1,298 @@
+<div [ngClass]="utlityService.getalert() == 'reviewfilter' ? ' showdrop ' : '  ' " class=" backdrop " (click)="utlityService.hidealert()" style="background-color: rgba(226, 226, 226, 0.086);" ></div>
+<app-alert [title]="product?.vari?.name +' পছন্দ করুন।'" [alert]="utlityService.getalert() == 'vari'" (close)="utlityService.hidealert()">
+ <div class="w-full p-3 min-h-full flex gap-1 items-center justify-start flex-col ">
+  <ul class="pb-3 flex flex-col items-center justify-start w-full gap-3 ">
+    <li *ngFor="let s of product?.vari?.values" 
+        [ngClass]="selectVari?.name == s?.name ? ' font-bold ' : '' " 
+        (click)="onVarichange(s)"
+         [ngClass]="s?.quantity <= 0 ? 'text-[red] hover:text-red-500 ' : ''" 
+         class=" flex items-center justify-between w-full px-3 py-1 cursor-pointer hover:font-bold">
+         <span class="font-bold text-lg uppercase " >{{s.name}}</span>
+         <span class="">{{s?.sprice}} /-</span>
+    </li>
+  </ul>
+</div>
+</app-alert>
+<app-alert [size]="2" [title]="'Ask Question'" [alert]="utlityService.getalert() == 'question'" (close)="utlityService.hidealert()">
+  <form [formGroup]="questionform" (ngSubmit)="createeditanswerquestion()" class="p-3 w-full min-h-full flex flex-col justify-between">
+    <textarea placeholder="Write..." rows="10" 
+      formControlName="question" type="text" name="question" id="question"
+      [ngClass]="{
+        'is-invalid': (f.question.errors && f.question.touched)
+        || (f.question.errors && submitted)
+      }"
+      class="w-full border rounded-md px-3 py-2">
+     </textarea>
+    <button class="px-4 py-2 bg-blue-600 text-white rounded-md">Ask Question</button>
+  </form>
+</app-alert>
+<app-alert [size]="2" [title]="'Question'" [alert]="utlityService.getalert() == 'seequestion'" (close)="utlityService.hidealert()">
+  <div class="w-full min-h-full flex flex-col justify-between gap-5 px-3 pb-3 ">
+     <div *ngFor="let item of questions; let i = index" class="w-full space-y-3 py-3 " 
+      [ngClass]="{'border-t border-gray-300': i !== 0}" >
+        <div class="w-full">
+            <a class="flex items-center gap-1">
+              {{item?.question}} 
+              <p *ngIf="!item?.answer" (click)="addeditQusetion(item)" class="flex items-center gap-1.5 mx-1 cursor-pointer text-blue-500 ">
+                <span class="size-1 rounded-full bg-blue-500 "></span>
+                <span>Edit</span>
+              </p>
+            </a>
+            <p class="text-sm text-gray-400">{{item?.customername}} {{item?.cdate | date}}</p>
+        </div>
+        <div class="w-full">
+            <p *ngIf="item?.answer" class=" text-gray-800">
+               {{item?.answer}} 
+            </p>
+             <p *ngIf="!item?.answer" class="text-sm text-gray-400">
+               {{'উত্তর দেয় নি।'}} 
+            </p>
+          <p *ngIf="item?.answer" class="text-sm text-gray-400">{{item?.name}} {{item?.cdate | date}}</p>
+        </div>
+    </div>
+    <div class="w-full ">
+       <app-button (click)="getproductquestions()" 
+       [class]=" ' cursor-pointer w-full rounded bg-blue-500 py-1.5 text-blue-50 hover:bg-blue-600 ' "
+       [txt]=" nomoreitem ? 'No more' : 'Load more' " [isloading]="loading">
+       </app-button>
+      </div>
+    </div>
+</app-alert>
+  
+<!-- image lightbox -->
+<div *ngIf="utlityService.getalert() == 'lightbox'" (click)="hideLightbox()" 
+  class="fixed top-0 left-0 w-[100%] h-[100%] md:p-5 bg-white z-[300] overflow-auto">
+    <div class="z-1 cursor-pointer p-3 fixed top-3 right-3 sm:top-10 sm:right-10 bg-white border border-gray-200 rounded-full ">
+      <svg fill="currentColor" class="text-gray-500 size-4 " viewBox="0 0 16 16">
+          <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+      </svg>  
+    </div>
+     <img src="{{sliderItems[activeimg].link}}" alt=" " 
+            class="bg-gray-50 min-w-[800px] max-w-[1100px] min-h-full mx-auto h-auto"
+            loading="lazy">
+</div>
+<!-- end image lightbox -->
+
+<div *ngIf="product" 
+  infiniteScroll
+  [infiniteScrollDistance]="1"
+  [infiniteScrollUpDistance]="3"
+  [infiniteScrollThrottle]="300"
+  (scrolled)="onScroll()" class="w-ful flex flex-col item-center justify-center ">
+<div class="w-full grid lg:grid-cols-7">
+  <div class="relative sm:max-w-[700px] lg:max-w-full lg:col-span-4 flex flex-col gap-3">
+    
+
+    <div class="p-0 sm:p-3 sm:pr-0 w-full grid grid-cols-4 gap-3">
+  <!-- Left side (thumbnails) -->
+  <div class="px-1 hidden sm:flex sm:col-span-1 flex-col gap-3">
+    <ng-container *ngFor="let item of sliderItems; let i = index">
+    <a *ngIf="item?.type == 1"  (click)="goToSlide(i)" class="p-5 cursor-pointer py-10 flex items-center justify-center rounded " [ngClass]="{
+     'border-2 border-blue-500': i === activeIndex,
+     'border border-gray-200': i !== activeIndex
+     }" >
+      <svg fill="currentColor" class="size-8 text-red-500" viewBox="0 0 16 16">
+            <path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.01 2.01 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.01 2.01 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31 31 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.01 2.01 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A100 100 0 0 1 7.858 2zM6.4 5.209v4.818l4.157-2.408z"/>
+          </svg>   
+    </a>
+    <img *ngIf="item?.type == 0" src="{{item?.link}}" [ngClass]="{
+     'border-2 border-blue-500': i === activeIndex,
+     'border border-transparent': i !== activeIndex
+     }" alt=" " 
+     (click)="goToSlide(i)" class="bg-gray-50 w-full h-full rounded cursor-pointer rounded-md transition-all duration-200 ease-in-out"
+    loading="lazy">
+    </ng-container>
+  </div>
+
+  <!-- Right side (main image) -->
+  <div class="relative col-span-4 sm:col-span-3">
+    <div *ngIf="sliderItems[activeIndex]" class="z-0">
+      <div *ngIf="sliderItems[activeIndex]?.type == 1" class="rounded-none sm:rounded relative w-full pb-[56.25%] overflow-hidden rounded shadow">
+        <iframe class="absolute top-0 left-0 w-full h-full"
+          [src]="sliderItems[activeIndex]?.link"
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen>
+        </iframe>
+      </div> 
+      <img *ngIf="sliderItems[activeIndex]?.type == 0" src="{{sliderItems[activeIndex]?.link}}"  (click)="clickzoom(activeIndex)" alt=" " 
+        class="bg-gray-50 w-full h-full rounded-none rounded-b-lg sm:rounded max-h-[450px] sm:max-h-[600px]" loading="lazy">
+    </div>
+    <div (click)="PrevNext(1)" class="absolute z-1 top-0 left-0 flex items-center justify-center bg-gray-50/50 w-[40px] h-full">
+      <span class="text-[30px] text-white"><</span>
+    </div>
+    <div (click)="PrevNext(2)" class="absolute z-1 top-0 right-0 flex items-center justify-center bg-gray-50/50 w-[40px] h-full">
+      <span class="text-[30px] text-white">></span>
+    </div>
+  </div>
+</div>
+  </div>
+  <div class="mt-3 sm:mt-0 p-2 md:p-3 w-full lg:col-span-3 flex gap-3 flex-wrap flex-col items-start justify-start"> 
+      <!-- buttons section -->
+      <div class="w-full flex justify-between sm:justify-start items-center gap-3">
+        <div class="w-[50%] ">
+          <button (click)="addItemToBasket()" class="cursor-pointer uppercase w-full min-h-[45px] rounded px-1 py-2 sm:py-3 text-white bg-[#ff3e6c]  
+            flex flex-wrap justify-center gap-2 items-center text-center  hover:bg-[#ff3e6bc6]
+             ">
+            <svg fill="currentColor" class="w-4 h-4 mb-1 text-white" viewBox="0 0 16 16">
+              <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4z"/>
+            </svg>
+             {{product?.quantity > 0 ? 'Add to bag' : 'পণ্যটি শেষ'}}
+            </button>
+        </div>
+        <div class="w-[50%] ">
+          <app-button (click)="addremovefav(product)" [heartcoclor]="product?.isfav ?true:false" [class]=" ' uppercase w-full min-h-[45px] rounded bg-[#ffffff !important] px-1 py-2 sm:py-3 border border-gray-200 hover:bg-gray-100 hover:text-[#323232ed!important] items-center  ' "
+          [txt]="'Favorite'" [isloading]="isloading"
+          [heart]="true">
+          </app-button>
+        </div>
+      </div> 
+      <!--end buttons section -->
+      <!-- name details price section -->
+      <div class="w-full border border-gray-200 rounded p-3 py-5 flex gap-3 flex-col flex-wrap items-start justify-start">
+       <p class="font-bold ">
+          <span *ngIf="product?.price && (product?.price > product?.sprice)">মূল প্রাইজ {{product?.price}} টাকা, </span>
+          বিক্রয় মূল্য মাত্র {{product?.sprice}} টাকায়
+       </p>
+        <p class=" font-bold ">{{product?.name}}</p>
+        <p class="" [innerHTML]="product?.details"></p>
+      </div> 
+      <!-- name details section  -->
+    <!-- offer show  -->
+<div *ngIf="offers?.length > 0" [routerLink]="['/offers']" class="w-full bg-blue-50 text-blue-500 rounded flex flex-col">
+  <div *ngFor="let offer of offers" class="w-full rounded p-3 grid gap-3 justify-start items-start ">
+    <div *ngFor="let item of offer?.coupons" class="w-full">
+      <p *ngIf="item?.minp > 0" class=" ">
+        {{item?.minp}} টাকার বেশি 
+         <span *ngIf="item?.minc > 0"> ও {{item?.minc}} টি প্রোডাক্ট</span>
+         কিনলে
+      </p>
+        পাচ্ছেন {{item?.value}} টাকা ছাড়।
+      <p class=" ">কুপন কোড ব্যবহার করুন 
+        <span class="text-blue-500 font-bold">{{item?.code}}</span>
+      </p>
+    </div>
+  </div>
+</div>
+    <!-- offer end  -->
+  </div>
+</div>
+<div class="p-2 md:p-3 space-y-3 ">
+<div class="rounded border border-gray-100 p-3 w-full flex flex-col gap-1">
+  <div class="flex items-center w-full justify-between ">
+    <h2 class=" ">রিভিউ <span class=" text-xs">({{reviews.l}})</span></h2>
+  </div>
+  <div class="w-full flex flex-col gap-3 ">
+    <div *ngFor="let item of reviews?.data | slice:0:3; let i = index" [ngClass]="{'border-t border-gray-200': i !== 0}" class="w-full flex flex-col md:flex-row gap-5 pt-5 ">
+        <div class="flex flex-col gap-3 ">
+          <div class="w-full flex gap-1 items-center text-[#EF4444] items-center justify-start " >
+           <ng-container *ngFor="let star of [0, 1, 2, 3, 4]; let i = index">
+            <ng-container *ngIf="1 >= i + 1; else halfOrEmpty">
+          <svg fill="currentColor" class="w-4.5 h-4.5" viewBox="0 0 16 16">
+            <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+          </svg>
+        </ng-container>
+        <ng-template #halfOrEmpty>
+          <ng-container *ngIf="2 >= i + 0.5; else empty">
+            <svg fill="currentColor" class="w-4.5 h-4.5" viewBox="0 0 16 16">
+              <path d="M5.354 5.119 7.538.792A.52.52 0 0 1 8 .5c.183 0 .366.097.465.292l2.184 4.327 4.898.696A.54.54 0 0 1 16 6.32a.55.55 0 0 1-.17.445l-3.523 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256a.5.5 0 0 1-.146.05c-.342.06-.668-.254-.6-.642l.83-4.73L.173 6.765a.55.55 0 0 1-.172-.403.6.6 0 0 1 .085-.302.51.51 0 0 1 .37-.245zM8 12.027a.5.5 0 0 1 .232.056l3.686 1.894-.694-3.957a.56.56 0 0 1 .162-.505l2.907-2.77-4.052-.576a.53.53 0 0 1-.393-.288L8.001 2.223 8 2.226z"/>
+            </svg>
+          </ng-container>
+          <ng-template #empty>
+            <svg fill="none" stroke="currentColor" stroke-linecap="round"
+             stroke-linejoin="round" stroke-width="2" class="w-4.5 h-4.5" viewBox="0 0 24 24">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+            </svg>
+          </ng-template>
+        </ng-template>
+        </ng-container>
+          </div>
+      <div class="flex flex-col gap-0.5">
+          <p class=" text-gray-800">
+            {{item?.review ? item?.review : ' উত্তর দেয়া নি। '}} 
+          </p>
+          <p *ngIf="item?.review" class="text-sm text-gray-400">{{item?.rby}} {{item?.date | date}}</p>
+        </div>
+
+        <div class="flex flex-col gap-0.5">
+          <p class=" text-gray-800">
+            {{item?.answer ? item?.answer : ' উত্তর দেয়া নি। '}} 
+          </p>
+          <p *ngIf="item?.review" class="text-sm text-gray-400">{{product?.name}} {{item?.ansdate | date}}</p>
+        </div>
+        </div>
+    </div>
+    <br>
+    <p *ngIf="reviews?.data?.length == 0" class="cursor-pointer group-hover:font-bold">
+      নতুন পণ্যটিতে কোন রিভিউ নেই।
+    </p>
+    <a *ngIf="(reviews?.data?.length > 3)" (click)="showReviewforproduct()" class=" text-blue-500 ">আরও দেখুন</a>
+  </div>
+</div>
+<div class="rounded border border-gray-100 p-3 w-full flex flex-col gap-1">
+  <div class="">
+    <a *ngIf="user" class="flex items-center gap-1">
+        কিছু জানতে চান প্রশ্ন করুন
+      <p (click)="addeditQusetion(null)" class="flex items-center gap-1.5 mx-1 cursor-pointer text-blue-500 ">
+        <span class="size-1 rounded-full bg-blue-500 "></span>
+        <span>Ask Question</span>
+      </p>
+   </a>
+   <div *ngIf="!user" routerLink="/login" class="w-full">
+    <a class="text-blue-500">Login </a> or 
+    <a class="text-blue-500">Register</a> to ask questions
+   </div>
+  </div>
+  <div class="group w-full flex flex-col gap-5">
+    <div *ngFor="let item of questions | slice:0:3 ; let i = index" class="w-full space-y-3 py-3 " 
+      [ngClass]="{'border-t border-gray-300': i !== 0}" >
+        <div class="w-full">
+            <a class="flex items-center gap-1">
+              {{item?.question}} 
+              <p *ngIf="!item?.answer" (click)="addeditQusetion(item)" class="flex items-center gap-1.5 mx-1 cursor-pointer text-blue-500 ">
+                <span class="size-1 rounded-full bg-blue-500 "></span>
+                <span>Edit</span>
+              </p>
+            </a>
+            <p class="text-sm text-gray-400">{{item?.customername}} {{item?.cdate | date}}</p>
+        </div>
+        <div class="w-full">
+            <p *ngIf="item?.answer" class=" text-gray-800">
+               {{item?.answer}} 
+            </p>
+             <p *ngIf="!item?.answer" class="text-sm text-gray-400">
+               {{'উত্তর দেয়া নি।'}} 
+            </p>
+          <p *ngIf="item?.answer" class="text-sm text-gray-400"> {{item?.cdate | date}}</p>
+        </div>
+    </div>
+    <p *ngIf="questions?.length == 0" (click)="askaquestionclick()" class="mt-5 cursor-pointer group-hover:font-bold">
+        আপনি যদি এই পণ্যটি সম্পর্কে কিছু জানতে চান, অনুগ্রহ করে প্রশ্ন করুন।
+    </p>
+    <a *ngIf="questions?.length > 2" (click)="seequestion()" class="cursor-pointer text-blue-500 ">আরও দেখুন</a>
+  </div>
+</div>
+  <main *ngIf="relatedproducts?.length > 0" class="w-full items-start grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ">
+    <a *ngFor="let item of relatedproducts" class="relative border border-gray-200 rounded w-full flex flex-col items-center justify-between"
+            [routerLink]="['/product', item?.uid]">
+            <img src="{{item?.file1}}" alt="" class="bg-gray-50 w-full min-h-[200px] xl:min-h-[250px] max-h-[400px] " loading="lazy">
+            <div class="p-2 w-full flex flex-col gap-1 items-start justify-center">
+              <a class="block font-bold truncate">
+                 {{ item?.name?.split(' ')?.slice(0, 2)?.join(' ') }}
+              </a>
+              <a class="max-w-[250px] md:max-w-[200px] block text-gray-400 truncate">
+                 {{ item?.name?.split(' ')?.slice(2)?.join(' ') }}
+              </a>
+              <div class="w-full bg-white mt-2 pt-1 border-t border-gray-200 flex gap-2 text-center items-center justify-between">
+                <span class="font-bold text-sm text-red-500"> {{ ((item?.price - item?.sprice) / item?.price * 100) | number:'1.0-0' }}% OFF</span>
+                <div class="flex gap-3 items-center ">
+                  <del class="text-sm text-gray-400">{{ item?.price }} /-</del>
+                  <p class="font-bold"><span class="text-lg ">{{ item?.sprice }}</span> /-</p>
+                </div>
+              </div>
+            </div>
+          </a>
+  </main>
+  </div>
+</div>    

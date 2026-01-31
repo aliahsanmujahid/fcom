@@ -1,0 +1,129 @@
+<app-alert [title]="user ? 'Confirm' :'Login'" [alert]="(utlityService.getalert() == 'authconfirm')" (close)="utlityService.hidealert()">
+  <div class="w-full min-h-full p-3 flex flex-col items-center justify-between sm:justify-center ">
+  <div class="sm:flex sm:items-start">
+      <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-green-100 sm:mx-0 sm:h-10 sm:w-10">
+          <svg class="h-6 w-6 text-green-600" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+      </div>
+      <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left space-y-1">
+          <h3 *ngIf="!user">
+            অর্ডার করতে দয়া করে <span class="text-red-500">লগইন</span> করুন।
+          </h3>
+          <h3 *ngIf="!user"><span class="text-red-500">লগইন</span> করা খুব সহজ, শুধু ফোন নম্বর দিন এবং <span class="text-emerald-500">OTP</span> যাচাই করুন।</h3>
+          <h3 *ngIf="user">
+            অর্ডার করার আগে নিশ্চিত হয়ে নিন।
+            আপনি কি সত্যিই এই অর্ডারটি দিতে চান? 
+          </h3>
+      </div>
+  </div>
+  <div class="w-full mt-10 sm:flex sm:flex-row-reverse">
+      <div class="flex w-full rounded shadow-sm sm:ml-3 sm:w-auto">
+          <button *ngIf="user" (click)="createorder(true)" type="button"
+              class=" cursor-pointer px-4 w-full rounded bg-blue-500 py-1.5 text-blue-50 hover:bg-blue-600 ">
+              Confirm
+          </button>
+          <button *ngIf="!user" routerLink="/login" type="button"
+              class=" cursor-pointer px-4 w-full rounded bg-blue-500 py-1.5 text-blue-50 hover:bg-blue-600 ">
+              Login
+          </button>
+      </div>
+  </div>
+  </div>
+</app-alert>
+<div *ngIf="basketService.basket$ | async" class="w-full p-2 sm:p-3 gap-3 flex justify-center items-start flex-col lg:flex-row">
+  <div class="w-full flex flex-col gap-5 items-center justify-center ">
+    <div class="w-full ">
+    <div class="w-full rounded-t border-x border-t border-gray-100 flex items-center justify-between p-3 ">
+        <p class=" mt-1 ">
+         Total <span class="font-bold">{{basket?.totalqty}}</span>
+        </p>
+    </div>
+  <div class="w-full space-y-3">
+    <div *ngFor="let product of basket?.products; let i = index" [ngClass]=" i == 0 ? ' rounded-t-none ' : ' '" class="w-full rounded p-3 border border-gray-100 ">
+      <div class="flex items-start justify-start gap-4 ">
+      <img [routerLink]="['/product', product?.puid]" src="{{ product?.img}}" alt="" 
+            class="bg-gray-50 w-30 h-auto rounded"
+            loading="lazy">
+      <div [routerLink]="['/product', product?.puid]" class="space-y-1">
+        <div class="flex flex-wrap gap-3 items-center ">
+          <h2 class="sm:text-lg font-bold text-gray-800">{{ product?.name?.split(' ')?.slice(0, 3)?.join(' ') }}</h2>
+        </div>
+        <p class=""><span class="font-bold">{{(product.sprice*product.quantity).toFixed(0)}} /-</span>
+          <span *ngIf="product.price && product.sprice" class="">, <span class="px-1">{{((product?.price - product?.sprice) / product?.price * 100).toFixed(0)}}%</span>OFF</span>
+        </p>
+        <p class="">
+          <span class="uppercase font-bold">
+            <span *ngIf="product?.vari?.values?.length > 0">
+              {{product?.vari?.values[0]?.name}},</span> 
+              {{product.quantity}}
+          </span>
+           item<span *ngIf="product.quantity > 1" >s</span>
+        </p>
+      </div>
+      </div>
+      <div class="w-full flex items-center gap-3 justify-end ">
+          <a (click)="basketService.removeItemFromBasket(product.eachid)" class="text-red-400 font-bold flex gap-1 text-sm justify-center items-center cursor-pointer  ">
+            <svg fill="currentColor" class="size-4 " viewBox="0 0 16 16">
+              <path d="M0 2a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1v7.5a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 1 12.5V5a1 1 0 0 1-1-1zm2 3v7.5A1.5 1.5 0 0 0 3.5 14h9a1.5 1.5 0 0 0 1.5-1.5V5zm13-3H1v2h14zM5 7.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5"/>
+            </svg>
+          </a>
+        <div class="rounded border border-gray-100 flex items-center justify-start ">
+                <span class="flex items-center cursor-pointer rounded-l p-1 duration-100" (click)="decrementItemQuantity(product)">
+                  <svg fill="currentColor" class="size-5.5 text-red-500" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8"/>
+                  </svg>
+                </span>
+                <span class="p-1 px-3">
+                  {{product?.quantity}}
+                </span>
+                <span class="flex items-center cursor-pointer rounded-r p-1 duration-100" (click)="incrementItemQuantity(product)">
+                  <svg fill="currentColor" class="size-5.5 text-green-500" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
+                  </svg>
+                </span>
+        </div>
+      </div>
+    </div>
+  </div>
+    </div>
+    </div>
+     <!-- right part -->
+    <div *ngIf="basketService.basket$ | async" class="w-full border border-gray-200 rounded p-3 flex flex-col gap-3 items-center justify-center">
+    <!-- ......address..... -->
+    <div class="w-full flex flex-col justify-between items-start">
+      <ng-container *ngIf="basket?.address">
+        <p class="sm:text-lg font-bold text-gray-800">{{basket?.address?.region}} / {{basket?.address?.city}} / {{basket?.address?.zone}}</p>
+        <p class="text-gray-600 ">{{basket?.address?.name}}, {{basket?.address?.phone}}</p>
+        <p class="text-gray-600 ">{{basket?.address?.address}}</p>
+      </ng-container>
+      <a *ngIf="!basket?.address" routerLink="/profile" class="text-blue-500 bg-blue-50 p-3 w-full text-start cursor-pointer ">
+        <span *ngIf="!user">Login / Signup করে</span> <span *ngIf="user">Profile এ</span> ঠিকানা যোগ করে অর্ডার করুন। 
+        Delivery ঠিকানা আপনার Profile এ যোগ করে নিন।
+      </a>
+    </div>
+    <!-- ......end address..... -->
+     <div class=" w-full flex items-center justify-between">
+         <p class="">Subtotal</p>
+         <p><span class="font-bold ">{{basket?.subtotal}} /-</span></p>
+      </div>
+      <div *ngIf="basket?.delivery" class="w-full flex items-center justify-between">
+         <p class="h4 ">Delivery Fee</p>
+         <p><span class="font-bold ">{{basket?.delivery}} /-</span></p>
+      </div>
+      <div *ngIf="basket.coupon" class="w-full flex items-center justify-between">
+          <p class="flex items-center gap-1 text-green-500 ">({{basket?.coupon.code}})</p>
+          <span class="text-red-500">- {{basket?.coupon.value}} /-</span>
+      </div>
+      <div class="w-full flex items-center justify-between">
+         <p class="h4 ">Total</p>
+         <p> <span class="font-bold ">{{basket?.total}} /-</span></p>
+      </div>
+      <div class="w-full ">
+       <app-button (click)="createorder(false)" 
+       [class]=" ' cursor-pointer w-full rounded bg-blue-500 py-2 text-blue-50 hover:bg-blue-600 ' "
+       [txt]=" 'অর্ডার করুন' " [isloading]="isloading">
+       </app-button>
+      </div>
+    </div>
+</div>

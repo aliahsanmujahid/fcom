@@ -1,0 +1,16 @@
+<div (click)="emitClose()" [ngClass]="alert ? 'showdrop' : ''" class="backdrop"></div>
+<div
+  [ngClass]="{' showdrop ': alert, ' size-1 ': size == 1,
+    ' size-2  ': size == 2, 'alert-box': true
+  }" class="rounded relative bg-white" >
+  <div class="flex items-center justify-between bg-white border-b border-gray-200 rounded-t p-3">
+    <span *ngIf="title" class="font-bold">{{ title }}</span>
+    <svg (click)="emitClose()" class="cursor-pointer text-red-600 size-5 " aria-hidden="true" fill="none" viewBox="0 0 24 24">
+      <path stroke="currentColor" stroke-linecap="round"
+        stroke-linejoin="round" stroke-width="2" d="M6 18L17.94 6M18 18L6.06 6" />
+    </svg>
+  </div>
+  <div class="alert-details overflow-y-scroll overflow-x-hidden ">
+    <ng-content></ng-content>
+  </div>
+</div>

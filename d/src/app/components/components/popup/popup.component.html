@@ -1,0 +1,5 @@
+<!-- popup -->
+<div *ngIf="(popup$ | async) && (popuptxt$ | async) as txt" [ngClass]="getClass('1'+txt)"  
+  class="w-[95%] bottom-2 rounded right-2 md:bottom-8 md:right-8 md:w-auto gap-2 flex flex-col items-start justify-start p-3 min-h-[70px] min-w-[300px] fixed z-[30000]">
+  <p [innerHTML]="txt?.split('/')[1]" class="max-w-[200px]"></p>
+</div>

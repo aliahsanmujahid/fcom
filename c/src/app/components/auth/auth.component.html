@@ -1,0 +1,71 @@
+<div class="m-3 bg-blue-50 min-h-[80vh] flex justify-center items-center"
+>
+  <div
+    class="p-3 border-3 border-blue-500 py-10 mx-3 rounded flex flex-col items-center justify-center gap-5 text-start w-full h-full max-w-sm"
+  >
+    <div *ngIf="!message" class="w-full">
+      <p>শুধুমাত্র OTP ভেরিফাই করে আপনি লগইন/সাইনআপ করতে পারবেন।</p>
+    </div>
+    <div class="w-full flex items-center justify-between ">
+      <div>
+        <h2 *ngIf="message" >{{ message?.split('/')[1] || message }}</h2>
+        <p *ngIf="time">{{ accountService.getMinutesPassed(time) }}</p>
+      </div>
+    </div>
+    <form class="w-full space-y-6" [formGroup]="authForm" (ngSubmit)="authSetup()">
+      <div>
+        <label for="phone" class="block">মোবাইল নাম্বার</label>
+        <input
+          id="phone"
+          type="text"
+          placeholder="মোবাইল নাম্বার"
+          formControlName="phone"
+          class="w-full rounded px-2 py-1.5 border border-gray-300"
+          [ngClass]="{
+            'is-invalid': (f.phone.errors && f.phone.touched) || (f.phone.errors && submitted)
+          }"
+        />
+      </div>
+      <div *ngIf="!nameExists">
+        <label for="name" class="block">নাম</label>
+        <input
+          id="name"
+          type="text"
+          placeholder="নাম"
+          formControlName="name"
+          class="w-full rounded px-2 py-1.5 border border-gray-300"
+          [ngClass]="{
+            'is-invalid': (f.name.errors && f.name.touched) || (f.name.errors && submitted)
+          }"
+        />
+      </div>
+      <div *ngIf="otpsended">
+        <label for="otp" class="block">OTP</label>
+        <input
+          id="otp"
+          type="text"
+          placeholder="OTP"
+          formControlName="otp"
+          class="w-full rounded px-2 py-1.5 border border-gray-300"
+          [ngClass]="{
+            'is-invalid': (f.otp.errors && f.otp.touched) || (f.otp.errors && submitted)
+          }"
+        />
+      </div>
+      <div class="w-full ">
+        <a *ngIf="sendagain" (click)="otpsendagain()" class="flex cursor-pointer text-blue-500 underline">
+          আবার OTP পাঠান।
+        </a>
+      </div>
+      <div class="w-full">
+        <app-button
+          [class]="
+            'w-full text-white px-4 py-1.5 cursor-pointer rounded bg-red-500 hover:bg-red-600 transition duration-200'
+          "
+          [txt]="otpsended ? 'Verify' : 'Signup / Login'"
+          [isloading]="isloading"
+        ></app-button>
+      </div>
+    </form>
+  </div>
+</div>

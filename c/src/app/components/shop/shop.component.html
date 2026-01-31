@@ -1,0 +1,35 @@
+<div class="break-all text-justify"
+  infiniteScroll
+  [infiniteScrollDistance]="1"
+  [infiniteScrollUpDistance]="3"
+  [infiniteScrollThrottle]="300"
+  (scrolled)="onScroll()"
+  >
+     <div class="flex w-full">
+      <div class="p-2 sm:p-3 w-full flex flex-col gap-5 items-center justify-start">
+        <main *ngIf="products?.length > 0" class="w-full items-start grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ">
+          <a *ngFor="let item of products" class="relative border border-gray-200 rounded w-full flex flex-col items-center justify-between"
+            [routerLink]="['/product', item?.uid]">
+            <img src="{{item?.file1}}" alt="" class="bg-gray-50 w-full min-h-[200px] xl:min-h-[250px] max-h-[400px] " loading="lazy">
+            <div class="w-full flex flex-col items-start justify-center">
+              <div class="w-full p-2 space-y-1">
+                <a class="block font-bold truncate">
+                 {{ item?.name?.split(' ')?.slice(0, 2)?.join(' ') }}
+                </a>
+                <a class="max-w-[250px] md:max-w-[200px] block text-gray-400 truncate">
+                 {{ item?.name?.split(' ')?.slice(2)?.join(' ') }}
+                </a>
+              </div>
+              <div class="w-full p-2 rounded-t-md border-t border-gray-200 flex gap-2 text-center items-center justify-between">
+                <span class="font-bold text-sm text-red-500"> {{ ((item?.price - item?.sprice) / item?.price * 100) | number:'1.0-0' }}% OFF</span>
+                <div class="flex gap-3 items-center ">
+                  <del class="text-sm text-gray-400">{{ item?.price }} /-</del>
+                  <p class="font-bold"><span class="text-lg ">{{ item?.sprice }}</span> /-</p>
+                </div>
+              </div>
+            </div>
+          </a>
+        </main>
+      </div>
+     </div>
+</div>
