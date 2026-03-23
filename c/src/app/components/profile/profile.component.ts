@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { AccountService } from 'src/app/_services/account.service';
 import { utlityService } from 'src/app/_services/utlity.service';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { StorageService } from 'src/app/_services/storage.service';
 import { filter, skip, take } from 'rxjs/operators';
@@ -13,7 +13,7 @@ import { SettingsService, Shop } from 'src/app/_services/settings.service';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
-  adminsite = null;
+  adminsite = environment.adminsite;
   user = null;
   constructor(public accountService: AccountService,public router: Router,
     public utlityService: utlityService,public storageService: StorageService,
@@ -49,7 +49,7 @@ export class ProfileComponent implements OnInit {
         if(user){
           this.user = user;
           if(user?.role == 'admin' || user?.role == 'moderator'){
-            this.adminsite = user?.addmn+'auth;jwt='+this.storageService.getItem('user');
+            this.adminsite = this.adminsite + 'auth;jwt='+this.storageService.getItem('user');
           }
         }
       });
