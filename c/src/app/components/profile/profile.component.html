@@ -196,7 +196,7 @@
   </div>
 </div>
 <div class="group my-3 mb-5 w-full flex justify-end items-end gap-3 ">
-  <button *ngIf="user?.hasshop" (click)="openUrl()" class="w-full rounded border-2 border-white py-1.5 px-4 rounded text-white bg-green-700 hover:bg-green-500 transition">
+  <button *ngIf="user?.role == 'admin'" (click)="openUrl()" class="w-full rounded border-2 border-white py-1.5 px-4 rounded text-white bg-green-700 hover:bg-green-500 transition">
     Sell Product
   </button>
   <button (click)="logout()" class="w-full rounded border-2 border-white py-1.5 px-4 rounded text-white bg-red-500 hover:bg-red-700 transition">
