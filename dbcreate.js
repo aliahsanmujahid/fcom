@@ -65,7 +65,7 @@ exports.product = async (req, res) => {
         quantity int DEFAULT 0,
         weight float DEFAULT 0,
         file1 VARCHAR(255),file2 VARCHAR(255),file3 VARCHAR(255),file4 VARCHAR(255),
-        video VARCHAR(255),hasvari int DEFAULT 0,
+        hasvari int DEFAULT 0,
         date DATETIME DEFAULT CURRENT_TIMESTAMP);`;
     db.query(sql, (err, result) => {
         if(err) throw err;

@@ -107,16 +107,7 @@
   <!-- Right side (main image) -->
   <div class="relative col-span-4 sm:col-span-3">
     <div *ngIf="sliderItems[activeIndex]" class="z-0">
-      <div *ngIf="sliderItems[activeIndex]?.type == 1" class="rounded-none sm:rounded relative w-full pb-[56.25%] overflow-hidden rounded shadow">
-        <iframe class="absolute top-0 left-0 w-full h-full"
-          [src]="sliderItems[activeIndex]?.link"
-          title="YouTube video player"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen>
-        </iframe>
-      </div> 
-      <img *ngIf="sliderItems[activeIndex]?.type == 0" src="{{sliderItems[activeIndex]?.link}}"  (click)="clickzoom(activeIndex)" alt=" " 
+      <img src="{{sliderItems[activeIndex]?.link}}"  (click)="clickzoom(activeIndex)" alt=" " 
         class="bg-gray-50 w-full h-full rounded-none rounded-b-lg sm:rounded max-h-[450px] sm:max-h-[600px]" loading="lazy">
     </div>
     <div (click)="PrevNext(1)" class="absolute z-1 top-0 left-0 flex items-center justify-center bg-gray-50/50 w-[40px] h-full">

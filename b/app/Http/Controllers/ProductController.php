@@ -464,7 +464,7 @@ public function createUpdateProduct(Request $request)
         $data = $request->only([
             'id', 'uid', 'catename', 'subcatename', 'cateid', 'subcateid',
             'name', 'details', 'sku', 'price', 'sprice', 'quantity', 'weight',
-            'file1', 'file2', 'file3', 'file4', 'video', 'vari', 'hasvari'
+            'file1', 'file2', 'file3', 'file4', 'vari', 'hasvari'
         ]);
         // Prepare product array
         $product = [
@@ -483,7 +483,6 @@ public function createUpdateProduct(Request $request)
             'file2' => $data['file2'] ?? null,
             'file3' => $data['file3'] ?? null,
             'file4' => $data['file4'] ?? null,
-            'video' => $data['video'] ?? null,
             'hasvari' => $data['hasvari'] ?? 0,
         ];
 

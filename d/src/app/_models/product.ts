@@ -18,7 +18,6 @@ export interface IProduct {
   file2:string,
   file3:string,
   file4:string,
-  video:string,
   vari : Ivari
 }
 
@@ -60,7 +59,6 @@ export interface Product {
   file2:string,
   file3:string,
   file4:string,
-  video:string,
   vari : Vari,
   date:Date,
 }

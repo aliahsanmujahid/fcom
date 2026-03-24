@@ -55,7 +55,6 @@ export class CreateproductComponent implements OnInit {
           file2:['', Validators.required],
           file3:['', Validators.required],
           file4:['', Validators.required],
-          video:[''],
           variname:[''],
           variitems: this.formBuilder.array([])
         });
@@ -140,7 +139,6 @@ export class CreateproductComponent implements OnInit {
         this.f.file2.setValue(res?.file2);
         this.f.file3.setValue(res?.file3);
         this.f.file4.setValue(res?.file4);
-        this.f.video.setValue(res?.video);
         if(res.vari?.values.length > 0){
           this.f.variname.setValue(res?.vari.name);
           await(res.vari?.values.forEach(e => {
@@ -177,7 +175,7 @@ export class CreateproductComponent implements OnInit {
       catename: this.f.catename.value,subcatename: this.f.subcatename.value,
       sku: this.f.sku.value,hasvari:0,price: this.f.price.value,sprice: this.f.sprice.value,
       quantity: this.f.quantity.value,
-      weight: this.f.weight.value,video:this.f.video.value,
+      weight: this.f.weight.value,
       file1: this.f.file1.value,file2: this.f.file2.value,
       file3: this.f.file3.value,file4: this.f.file4.value,
       vari: {name:'',values:[]}

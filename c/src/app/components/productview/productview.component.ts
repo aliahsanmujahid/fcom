@@ -221,30 +221,11 @@ export class ProductviewComponent implements OnChanges {
     });
     }
   }
-  transform(url: string): SafeResourceUrl {
-   const videoId = this.extractVideoId(url);
-   let youtubeEmbedUrl: SafeResourceUrl | null = null;
-   if (videoId) {
-    youtubeEmbedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-     `https://www.youtube.com/embed/${videoId}?rel=0`);
-    } else {
-     youtubeEmbedUrl = null;
-    }
-    return youtubeEmbedUrl;
-  }
-  private extractVideoId(url: string): string | null {
-    const regex = /[?&]v=([a-zA-Z0-9_-]{11})|youtu\.be\/([a-zA-Z0-9_-]{11})|embed\/([a-zA-Z0-9_-]{11})/;
-    const match = url.match(regex);
-    return match ? (match[1] || match[2] || match[3]) : null;
-  }
   async filldata(){
     this.sliderItems = [];
-    if(this.product?.video){
-     await this.sliderItems.push({type:1,link:this.transform(this.product?.video)});
-    }
     for(let i=1;i<=7;i++){
       if(this.product['file'+i] && this.product['file'+i] != ""){
-        this.sliderItems.push({type:0,link:(this.product['file'+i])});
+        this.sliderItems.push({link:(this.product['file'+i])});
       }
     }
     this.cartProduct = {
