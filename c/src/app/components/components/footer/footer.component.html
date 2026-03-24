@@ -98,14 +98,14 @@
 </div>
 <!-- popup end -->
 
-<div class="w-full p-3 pb-5">
-      <div *ngIf="sitecontent" class="container rounded mx-auto font-medium text-base py-10 flex flex-col gap-5 items-center justify-center ">
-    <div class="w-full flex flex-col gap-3 ">
-    <div class="w-full flex items-center justify-start gap-7">
+<div class="w-full p-3 py-15 border-t border-t-gray-200 rounded-t">
+  <div *ngIf="sitecontent" class="container rounded mx-auto font-medium text-base flex flex-col gap-5 items-center justify-center ">
+     <div class="w-full flex items-center justify-start gap-7">
         <a *ngIf="sitecontent.facebook" href="{{sitecontent.facebook}}" target="_blank" class="cursor-pointer">
-          <svg fill="currentColor" class="size-6 text-blue-500" viewBox="0 0 16 16">
-            <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951"/>
-          </svg>                          
+         <svg class="size-6 rounded" viewBox="0 0 24 24">
+           <rect width="24" height="24" fill="#1877F2"/>
+           <path d="M14.5 8H16V5.5H14.5C12.57 5.5 11.5 6.7 11.5 8.7V10H9.5V12.5H11.5V18H14.5V12.5H16L16.5 10H14.5V9C14.5 8.45 14.8 8 15.5 8H14.5Z" fill="#ffffff"/>
+         </svg>
         </a>
         <a *ngIf="sitecontent.instagram" href="{{sitecontent.instagram}}" target="_blank" class="cursor-pointer">
           <svg fill="currentColor" class="size-6 text-[#E1306C]" viewBox="0 0 16 16">
@@ -113,28 +113,29 @@
           </svg>
         </a>
         <a *ngIf="sitecontent.tiktok" href="{{sitecontent.tiktok}}" target="_blank">
-          <svg fill="currentColor" class="size-6 text-blue-950" viewBox="0 0 16 16">
-            <path d="M9 0h1.98c.144.715.54 1.617 1.235 2.512C12.895 3.389 13.797 4 15 4v2c-1.753 0-3.07-.814-4-1.829V11a5 5 0 1 1-5-5v2a3 3 0 1 0 3 3z"/>
+          <svg class="size-6 rounded" viewBox="0 0 24 24">
+            <rect width="24" height="24" fill="#000000"/>
+            <g transform="scale(1.3) translate(-2.8, -2.8)">
+              <path d="M14.5 6.5c.8.9 1.8 1.5 3 1.7v2.2c-1.3-.1-2.5-.6-3.5-1.4v4.8c0 2.6-2 4.2-4.3 4.2-2.2 0-4.2-1.5-4.2-4 0-2.6 2.2-4.1 4.2-4.1.3 0 .6 0 .8.1v2.3c-.2-.1-.5-.1-.8-.1-1 0-1.9.7-1.9 1.8s.9 1.8 1.9 1.8c1.1 0 1.9-.7 1.9-2V6.5h2.9z" fill="#ffffff"/>
+            </g>
           </svg>
         </a>
         <a *ngIf="sitecontent.youtube" href="{{sitecontent.youtube}}" target="_blank" >
-          <svg fill="currentColor" class="size-6 text-red-500" viewBox="0 0 16 16">
-            <path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.01 2.01 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.01 2.01 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31 31 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.01 2.01 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A100 100 0 0 1 7.858 2zM6.4 5.209v4.818l4.157-2.408z"/>
-          </svg>                          
+          <svg class="size-6 rounded" viewBox="0 0 24 24">
+            <rect width="24" height="24" fill="#FF0000"/>
+            <polygon points="10,8 16,12 10,16" fill="#ffffff"/>
+          </svg>                         
         </a>
     </div>
-    </div>
-    <div class="w-full flex gap-5 flex-col">
-      <div class="flex flex-wrap items-center gap-3 ">
-        <a *ngFor="let page of pages" class="text-sm text-gray-600 font-bold uppercase tracking-wide" [routerLink]="['/pages', page?.name]" >
+    <div class="w-full flex flex-col sm:flex-row flex-wrap items-start gap-3 ">
+        <a *ngFor="let page of pages" class="text-sm font-bold uppercase tracking-wide" [routerLink]="['/pages', page?.name]" >
           {{ page?.name }}
         </a>
-      </div>
     </div>
+    <p class="w-full uppercase text-xs text-right ">
+     © {{ year }} {{ utlityService.getSiteName() }}
+    </p>
   </div>
-  <p class="w-full uppercase text-xs text-gray-500 text-right ">
-  © {{ year }} {{ utlityService.getSiteName() }}
-</p>
 </div>
 
 <div class="rounded-t-lg bg-white min-h-[55px] max-h-[55px] sticky bottom-0 right-0 left-0 z-[1] lg:hidden 
@@ -158,9 +159,9 @@
     </div>
     <div class="items-center justify-center flex w-full text-center">
       <a (click)="profileclick()" class="items-center justify-center flex gap-0.5 flex-col w-full text-center">
-        <svg fill="currentColor" class="text-gray-600 size-6" viewBox="0 0 16 16">
-          <path d="M8 9.05a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
-          <path d="M1 1a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h.5a.5.5 0 0 0 .5-.5.5.5 0 0 1 1 0 .5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5.5.5 0 0 1 1 0 .5.5 0 0 0 .5.5h.5a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H6.707L6 1.293A1 1 0 0 0 5.293 1zm0 1h4.293L6 2.707A1 1 0 0 0 6.707 3H15v10h-.085a1.5 1.5 0 0 0-2.4-.63C11.885 11.223 10.554 10 8 10c-2.555 0-3.886 1.224-4.514 2.37a1.5 1.5 0 0 0-2.4.63H1z"/>
+        <svg fill="currentColor" class="size-5 text-gray-600" viewBox="0 0 16 16">
+          <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+          <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1v-1c0-1-1-4-6-4s-6 3-6 4v1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/>
         </svg>
         <span class="text-xs">{{ (accountService.currentUser$ | async)?.name?.split(' ')?.slice(0, 1)?.join(' ') || 'লগইন' }}</span>
       </a>

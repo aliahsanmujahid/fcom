@@ -2,7 +2,7 @@
 <app-navbar class="text-base"></app-navbar>
 <div *ngIf="(utlityService.loader$ | async)" class="size-10 border-3 rounded-full border-dotted border-gray-400 animate-spin fixed top-30 left-1/2 -translate-x-1/2 z-[100]"></div>
 <div class="flex font-medium text-base mx-auto min-h-[100vh]">
-  <div class="border border-gray-100 h-full hidden md:block fixed left-0 top-15 md:w-50 lg:w-60 ">
+  <div class="border border-gray-100 h-full hidden md:block fixed left-0 top-15 w-60 ">
     <div class="p-5 pt-3 pb-30 bg-white h-full overflow-y-auto ">
        <div class="grid grid-cols-2 gap-1"> 
       <div *ngFor="let item of accountService.sorts; let i = index"
@@ -48,7 +48,7 @@
       </div>
     </div>
   </div>
-  <div class="flex-1 md:ml-50 lg:ml-60">
+  <div class="flex-1 md:ml-60">
    <div class="w-full min-h-[100vh]">
      <router-outlet></router-outlet>
    </div>
