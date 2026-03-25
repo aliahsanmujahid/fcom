@@ -84,7 +84,7 @@
   </div>
   </div>
   <!-- right part -->
-  <div *ngIf="basketService.basket$ | async" class="w-full p-3 lg:p-0 border lg:border-0 border-gray-200 rounded flex flex-col gap-5 items-center justify-center">
+  <div *ngIf="basketService.basket$ | async" class="w-full p-3 lg:p-0 border lg:border-0 border-gray-100 rounded flex flex-col gap-5 items-center justify-center">
     <!-- ......address..... -->
     <form [formGroup]="cartForm" class="gap-5 w-full min-h-full flex flex-col items-center justify-between">
         <div class="w-full flex flex-col gap-3">
@@ -118,7 +118,7 @@
               (f.district.errors && submitted)
             }"
           (change)="onDistrictChange($event)">
-    <option value="">Select Province</option>
+    <option value="">জেলা</option>
     <option *ngFor="let r of bdaddress" [value]="r.district">{{ r.district }}</option>
   </select>
 </div>
@@ -132,7 +132,7 @@
               (f.upazila.errors && f.upazila.touched) ||
               (f.upazila.errors && submitted)
             }">
-    <option value="">Select upazila</option>
+    <option value="">উপজেলা</option>
     <option *ngFor="let c of upazilas" [value]="c">{{ c }}</option>
   </select>
 </div>
