@@ -31,14 +31,9 @@
   </div>
   </div>
 </app-alert>
-<div *ngIf="basketService.basket$ | async" class="w-full p-2 sm:p-3 gap-3 flex justify-center items-start flex-col lg:flex-row">
+<div *ngIf="basketService.basket$ | async" class="w-full p-2 lg:p-5 gap-5 flex justify-center items-start flex-col lg:flex-row">
   <div class="w-full flex flex-col gap-5 items-center justify-center ">
-    <div class="w-full ">
-    <div class="w-full rounded-t border-x border-t border-gray-100 flex items-center justify-between p-3 ">
-        <p class=" mt-1 ">
-         Total <span class="font-bold">{{basket?.totalqty}}</span>
-        </p>
-    </div>
+  <div class="w-full ">
   <div class="w-full space-y-3">
     <div *ngFor="let product of basket?.products; let i = index" [ngClass]=" i == 0 ? ' rounded-t-none ' : ' '" class="w-full rounded p-3 border border-gray-100 ">
       <div class="flex items-start justify-start gap-4 ">
@@ -86,44 +81,115 @@
       </div>
     </div>
   </div>
-    </div>
-    </div>
-     <!-- right part -->
-    <div *ngIf="basketService.basket$ | async" class="w-full border border-gray-200 rounded p-3 flex flex-col gap-3 items-center justify-center">
+  </div>
+  </div>
+  <!-- right part -->
+  <div *ngIf="basketService.basket$ | async" class="w-full p-3 lg:p-0 border lg:border-0 border-gray-200 rounded flex flex-col gap-5 items-center justify-center">
     <!-- ......address..... -->
-    <div class="w-full flex flex-col justify-between items-start">
-      <ng-container *ngIf="basket?.address">
-        <p class="sm:text-lg font-bold text-gray-800">{{basket?.address?.region}} / {{basket?.address?.city}} / {{basket?.address?.zone}}</p>
-        <p class="text-gray-600 ">{{basket?.address?.name}}, {{basket?.address?.phone}}</p>
-        <p class="text-gray-600 ">{{basket?.address?.address}}</p>
-      </ng-container>
-      <a *ngIf="!basket?.address" routerLink="/profile" class="text-blue-500 bg-blue-50 p-3 w-full text-start cursor-pointer ">
-        <span *ngIf="!user">Login / Signup করে</span> <span *ngIf="user">Profile এ</span> ঠিকানা যোগ করে অর্ডার করুন। 
-        Delivery ঠিকানা আপনার Profile এ যোগ করে নিন।
-      </a>
-    </div>
+    <form [formGroup]="cartForm" class="gap-5 w-full min-h-full flex flex-col items-center justify-between">
+        <div class="w-full flex flex-col gap-3">
+        <div class="grid grid-cols-2 gap-3 w-full">
+         <div class="form-group flex flex-col w-full">
+          <label for="name" class="block text-gray-900 mb-2" for="Name">আপনার নাম</label>
+             <input type="text" class="rounded px-2 py-1.5 border border-gray-300" name="name" id="name"
+             formControlName="name" [ngClass]="{
+              'is-invalid':
+              (f.name.errors && f.name.touched) ||
+              (f.name.errors && submitted)
+            }" placeholder="আপনার নাম"  >
+          </div>
+           <div class="form-group flex flex-col w-full">
+          <label for="phone" class="block text-gray-900 mb-2">মোবাইল নাম্বার</label>
+             <input type="text" class="rounded px-2 py-1.5 border border-gray-300" name="phone" id="phone"
+             formControlName="phone" [ngClass]="{
+              'is-invalid':
+              (f.phone.errors && f.phone.touched) ||
+              (f.phone.errors && submitted)
+            }" placeholder="মোবাইল নাম্বার"  >
+          </div>
+<div class="form-group flex flex-col w-full mb-4">
+  <label for="" class="block text-gray-900 mb-2">জেলা</label>
+  <select class="cursor-pointer rounded px-2 py-1.5 border border-gray-300"
+          formControlName="district"
+          id="district"
+           [ngClass]="{
+              'is-invalid':
+              (f.district.errors && f.district.touched) ||
+              (f.district.errors && submitted)
+            }"
+          (change)="onDistrictChange($event)">
+    <option value="">Select Province</option>
+    <option *ngFor="let r of bdaddress" [value]="r.district">{{ r.district }}</option>
+  </select>
+</div>
+<div class="form-group flex flex-col w-full mb-4">
+  <label for="upazila" class="block text-gray-900 mb-2">উপজেলা</label>
+  <select class="cursor-pointer rounded px-2 py-1.5 border border-gray-300"
+          formControlName="upazila"
+          id="upazila"
+           [ngClass]="{
+              'is-invalid':
+              (f.upazila.errors && f.upazila.touched) ||
+              (f.upazila.errors && submitted)
+            }">
+    <option value="">Select upazila</option>
+    <option *ngFor="let c of upazilas" [value]="c">{{ c }}</option>
+  </select>
+</div>
+        </div>
+      <div class="form-group flex flex-col w-full">
+          <label for="address" class="block text-gray-900 mb-2">আপনার ঠিকানা</label>
+             <textarea 
+  class="rounded px-2 py-1.5 border border-gray-300" 
+  name="address" 
+  id="address"
+  formControlName="address"
+  [ngClass]="{
+    'is-invalid':
+    (f.address.errors && f.address.touched) ||
+    (f.address.errors && submitted)
+  }" 
+  placeholder="আপনার ঠিকানা"
+  rows="5">
+</textarea>
+          </div>
+        </div>
+    </form>
+
+  <div class="w-full bg-white border border-gray-200 rounded p-3 space-y-3 ">
+
+  <div class="flex justify-between">
+    <span class="text-gray-600">Subtotal</span>
+    <span class="">{{ basket?.subtotal }} /-</span>
+  </div>
+
+  <div class="flex justify-between" *ngIf="basket?.delivery">
+    <span class="text-gray-600">Delivery Fee</span>
+    <span class="">{{ basket?.delivery }} /-</span>
+  </div>
+
+  <div class="flex justify-between" *ngIf="basket?.coupon">
+    <span class="text-green-600">
+      Coupon ({{ basket?.coupon.code }})
+    </span>
+    <span class="text-red-500">
+      - {{ basket?.coupon.value }} /-
+    </span>
+  </div>
+
+  <div class="flex justify-between text-base font-semibold">
+    <span>Total</span>
+    <span>{{ basket?.total }} /-</span>
+  </div>
+
+</div>
+
     <!-- ......end address..... -->
-     <div class=" w-full flex items-center justify-between">
-         <p class="">Subtotal</p>
-         <p><span class="font-bold ">{{basket?.subtotal}} /-</span></p>
-      </div>
-      <div *ngIf="basket?.delivery" class="w-full flex items-center justify-between">
-         <p class="h4 ">Delivery Fee</p>
-         <p><span class="font-bold ">{{basket?.delivery}} /-</span></p>
-      </div>
-      <div *ngIf="basket.coupon" class="w-full flex items-center justify-between">
-          <p class="flex items-center gap-1 text-green-500 ">({{basket?.coupon.code}})</p>
-          <span class="text-red-500">- {{basket?.coupon.value}} /-</span>
-      </div>
-      <div class="w-full flex items-center justify-between">
-         <p class="h4 ">Total</p>
-         <p> <span class="font-bold ">{{basket?.total}} /-</span></p>
-      </div>
       <div class="w-full ">
        <app-button (click)="createorder(false)" 
        [class]=" ' cursor-pointer w-full rounded bg-blue-500 py-2 text-blue-50 hover:bg-blue-600 ' "
        [txt]=" 'অর্ডার করুন' " [isloading]="isloading">
        </app-button>
       </div>
-    </div>
+  </div>
 </div>

@@ -125,13 +125,13 @@ export class ProfileComponent implements OnInit {
     { id:2, name: 'Female', }
   ]
   openUrl(){
-    // if((!this.user?.gender && !this.user?.dob && !this.user?.bodytype) || this.user?.address?.length == 0){
-    //   if((!this.user?.gender && !this.user?.dob && !this.user?.bodytype )){
-    //     this.utlityService.show("2/Update user info");
-    //     this.editProfile();
-    //   }
-    //   return;
-    // }
+    if((!this.user?.gender && !this.user?.dob && !this.user?.bodytype) || this.user?.address?.length == 0){
+      if((!this.user?.gender && !this.user?.dob && !this.user?.bodytype )){
+        this.utlityService.show("2/Update user info");
+        this.editProfile();
+      }
+      return;
+    }
     this.accountService.openInNewTab(this.adminsite)
   }
 upazilas: any[] = [];

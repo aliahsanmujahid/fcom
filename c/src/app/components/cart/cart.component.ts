@@ -8,6 +8,7 @@ import {Basket, SettingsService, Shop } from 'src/app/_services/settings.service
 import { utlityService } from 'src/app/_services/utlity.service';
 import { environment } from 'src/environments/environment';
 import { StorageService } from 'src/app/_services/storage.service';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'app-cart',
   templateUrl: './cart.component.html',
@@ -17,7 +18,7 @@ export class CartComponent implements OnInit {
   basket:Basket = null;
   constructor(public accountService: AccountService,public basketService: BasketService,
     private orderService: OrderService,public utlityService: utlityService,
-    public storageService: StorageService,
+    public storageService: StorageService,private formBuilder: UntypedFormBuilder,
     private router: Router,public settingsService: SettingsService) {
       this.utlityService.hidealert();
       this.utlityService.hidereviewalert();
@@ -32,7 +33,15 @@ export class CartComponent implements OnInit {
   isloading: boolean = null;
   setaddress = false;
   delivery = [];
+  cartForm: UntypedFormGroup;
   async ngOnInit(): Promise<void> {
+    this.cartForm = this.formBuilder.group({
+      name: ['', Validators.required],
+      phone: ['', Validators.required],
+      district: ['', Validators.required],
+      upazila: ['', Validators.required],
+      address: ['', Validators.required],
+    });
     this.utlityService.setParams(new Shop(),false);
     this.basketService.basket$.subscribe( res => {
       if(res){
@@ -44,7 +53,12 @@ export class CartComponent implements OnInit {
       if(user){
         this.user = user;
       }
-    });  
+    });
+    this.getbdaddress();  
+  }
+  submitted = false;
+  get f() {
+    return this.cartForm.controls;
   }
   async basketcheckset(basket: any): Promise<boolean> {
     const res = await firstValueFrom(this.basketService.basketcheckset(basket));
@@ -106,6 +120,21 @@ export class CartComponent implements OnInit {
     this.isloading = true;
     await this.basketService.decrementItemQuantity(product);
     this.isloading = false;
+  }
+  upazilas: any[] = [];
+  onDistrictChange(event: Event) {
+   const disName = (event.target as HTMLSelectElement).value;
+   const district = this.bdaddress.find(r => r.district == disName);
+   this.upazilas = district.upazilas ? district.upazilas : [];
+   console.log("upazila...",district, district.upazila);
+   this.cartForm.get('upazila')?.setValue('');
+  }
+  bdaddress = [];
+  getbdaddress(){
+    this.accountService.getbdaddress().subscribe(res=>{
+        this.bdaddress = res;
+        console.log("bd address...", res);
+    });
   }
 }
 
